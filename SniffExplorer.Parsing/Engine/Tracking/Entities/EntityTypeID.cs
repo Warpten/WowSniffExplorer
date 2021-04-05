@@ -1,6 +1,6 @@
 ﻿namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 {
-    public enum EntityTypeID
+    public enum EntityTypeID : byte
     {
         Object,
         Item,

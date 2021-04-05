@@ -16,7 +16,7 @@ namespace SniffExplorer.Parsing.Engine
     public readonly struct ParsingOptions
     {
         /// <summary>
-        /// When this option is set to <see cref="bool">true</see>, descriptors (also know as update fields)
+        /// When this option is set to <see cref="bool">trueT</see>, descriptors (also know as update fields)
         /// will not keep an history of their value. Only the last value seen in sniffs will be kept.
         ///
         /// You should use this in situations where you need to parse a sniff only for movements, or spells.

@@ -10,7 +10,7 @@ namespace SniffExplorer.Parsing.Types.Enums
     /// This is <b>not</b> the game's classmask. This is used exclusively for filtering.
     /// </summary>
     [Flags]
-    public enum ClassMask
+    public enum ClassMask : ushort
     {
         Warrior     = 0x0001,
         Paladin     = 0x0002,
