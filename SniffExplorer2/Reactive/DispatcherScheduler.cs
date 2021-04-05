@@ -22,7 +22,7 @@ namespace SniffExplorer.UI.Reactive
         /// Gets the scheduler that schedules work on the current <see cref="System.Windows.Threading.Dispatcher"/>.
         /// </summary>
         [Obsolete()]
-        public static DispatcherScheduler Instance => new DispatcherScheduler(Dispatcher.CurrentDispatcher);
+        public static DispatcherScheduler Instance => new(Dispatcher.CurrentDispatcher);
 
         /// <summary>
         /// Gets the scheduler that schedules work on the <see cref="System.Windows.Threading.Dispatcher"/> for the current thread.

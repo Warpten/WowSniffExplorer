@@ -156,7 +156,7 @@ namespace SniffExplorer.Generators.UpdateFields
 
     class SyntaxReceiver : ISyntaxContextReceiver
     {
-        public List<INamedTypeSymbol> Enumerations { get; } = new List<INamedTypeSymbol>();
+        public List<INamedTypeSymbol> Enumerations { get; } = new();
 
         /// <summary>
         /// Called for every syntax node in the compilation, we can inspect the nodes and save any information useful for generation

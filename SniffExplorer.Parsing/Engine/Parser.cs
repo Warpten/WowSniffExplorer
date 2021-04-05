@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Loading;
+using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
 
 namespace SniffExplorer.Parsing.Engine
@@ -113,7 +114,8 @@ namespace SniffExplorer.Parsing.Engine
                             var atomicOperation = Observable.Start(() =>
                             {
                                 _parsingContext.Helper.Handlers.Process(packet);
-                                return (Opcode: packet.Opcode, Index: index);
+                                return (packet.Opcode, Index: index);
+                                
                             }, TaskPoolScheduler.Default);
 
                             // And subscribe to it for UI feedback.

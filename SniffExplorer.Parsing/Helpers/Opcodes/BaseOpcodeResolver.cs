@@ -34,7 +34,7 @@ namespace SniffExplorer.Parsing.Helpers.Opcodes
 
             public DirectionHelper BeginUpdate(PacketDirection direction)
             {
-                return new DirectionHelper(this, _storage[direction]);
+                return new(this, _storage[direction]);
             }
 
             public ClientBuildStorage Register(PacketDirection direction, Opcode opcode, uint value)

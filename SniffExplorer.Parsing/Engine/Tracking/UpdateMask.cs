@@ -12,11 +12,19 @@ namespace SniffExplorer.Parsing.Engine.Tracking
     {
         private readonly Span<uint> _values;
         private readonly int _bitBase;
+        private readonly int _limit;
 
-        public UpdateMask(Span<uint> values, int @base = 0)
+        public int Length => _limit - _bitBase;
+
+        public UpdateMask(Span<uint> values, int @base = 0, int limit = 0)
         {
             _values = values;
+
+            // First accessible bit
             _bitBase = @base;
+
+            // First non-accessible bit
+            _limit = limit == 0 ? _bitBase + (values.Length << 5) : _bitBase + limit;
         }
 
         public bool this[int index]
@@ -25,7 +33,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             {
                 // Out of bounds scan, return false
                 var wordIndex = (_bitBase + index) >> 5;
-                if (wordIndex < _values.Length)
+                if (_bitBase + index < _limit && wordIndex < _values.Length)
                     return (_values[wordIndex] & (1 << (_bitBase + index))) != 0;
 
                 return false;
@@ -34,10 +42,24 @@ namespace SniffExplorer.Parsing.Engine.Tracking
 
         public UpdateMask LeftShift(int bitCount) => new(_values, _bitBase + bitCount);
 
+        public UpdateMask Slice(int bitOffset, int bitCount) => new(_values, _bitBase + bitOffset, bitCount);
+
+        public bool Any()
+        {
+            for (var i = _bitBase; i < _limit; ++i)
+            {
+                var wordIndex = i >> 5;
+                if (wordIndex < _values.Length && (_values[wordIndex] & (1 << i)) != 0)
+                    return true;
+            }
+
+            return false;
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (var i = 0; i < _values.Length * Unsafe.SizeOf<uint>() * 8; ++i)
+            for (var i = 0; i < _limit - _bitBase; ++i)
                 sb.Append(this[i] ? '1' : '0');
             return sb.ToString();
         }

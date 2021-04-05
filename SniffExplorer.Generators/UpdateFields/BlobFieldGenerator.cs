@@ -16,7 +16,7 @@ namespace SniffExplorer.Generators.UpdateFields
         protected override string GetElementInitializer(GeneratorExecutionContext context,
             IteratorGenerator.Iterator? iterator = null)
         {
-            return $"new BlobUpdateField({Offset}, {_cardinality})";
+            return $"new BlobUpdateField({Offset}, {_cardinality}, context)";
         }
     }
 }

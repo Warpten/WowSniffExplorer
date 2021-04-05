@@ -138,7 +138,7 @@ namespace {{ ContainingNamespace }}
 
         class SyntaxReceiver : ISyntaxContextReceiver
         {
-            public List<IFieldSymbol> Fields { get; } = new List<IFieldSymbol>();
+            public List<IFieldSymbol> Fields { get; } = new();
 
             /// <summary>
             /// Called for every syntax node in the compilation, we can inspect the nodes and save any information useful for generation

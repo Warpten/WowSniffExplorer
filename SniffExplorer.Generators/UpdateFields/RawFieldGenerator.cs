@@ -18,9 +18,9 @@ namespace SniffExplorer.Generators.UpdateFields
             IteratorGenerator.Iterator? iterator = null)
         {
             if (iterator != null)
-                return $"new RawUpdateField<{typeof(T).FullName}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd)";
+                return $"new RawUpdateField<{typeof(T).FullName}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd, context)";
 
-            return $"new RawUpdateField<{typeof(T).FullName}>({Offset})";
+            return $"new RawUpdateField<{typeof(T).FullName}>({Offset}, context)";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SniffExplorer.Parsing.Cache
 {
     public class ApplicationCache
     {
-        public static Lazy<ApplicationCache> Instance { get; } = new Lazy<ApplicationCache>(() => new ApplicationCache("Cache.db"));
+        public static Lazy<ApplicationCache> Instance { get; } = new(() => new ApplicationCache("Cache.db"));
 
         private readonly SqliteConnection _connection;
 

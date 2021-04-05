@@ -24,7 +24,7 @@ namespace SniffExplorer.Generators.Utilities.Generation
     {
         private readonly string _name;
 
-        private readonly List<GeneratedClass> _classes = new List<GeneratedClass>();
+        private readonly List<GeneratedClass> _classes = new();
 
         public string Name => _name;
         public IGeneratedBlock? ContainingBlock { get; } = null;
@@ -33,7 +33,7 @@ namespace SniffExplorer.Generators.Utilities.Generation
             => _name = name;
 
         public GeneratedClass BeginClass(string name)
-            => new GeneratedClass(this, name);
+            => new(this, name);
 
         public IEnumerable<INamespaceSymbol?> CollectNamespaces()
             => _classes.SelectMany(c => c.CollectNamespaces());
@@ -65,7 +65,7 @@ namespace SniffExplorer.Generators.Utilities.Generation
         private readonly GeneratedClass _enclosingType;
 
         private readonly ITypeSymbol? _returnType;
-        private readonly List<GeneratedParameter> _parameters = new List<GeneratedParameter>();
+        private readonly List<GeneratedParameter> _parameters = new();
 
         public string Name => _name;
         public IGeneratedBlock? ContainingBlock => _enclosingType;
@@ -161,9 +161,9 @@ namespace SniffExplorer.Generators.Utilities.Generation
 
     public class GeneratedClass : IGeneratedBlock
     {
-        private readonly List<GeneratedMethod> _methods = new List<GeneratedMethod>();
-        private readonly List<GeneratedField> _fields = new List<GeneratedField>();
-        private readonly List<GeneratedProperty> _properties = new List<GeneratedProperty>();
+        private readonly List<GeneratedMethod> _methods = new();
+        private readonly List<GeneratedField> _fields = new();
+        private readonly List<GeneratedProperty> _properties = new();
 
         public string Name { get; }
         public IGeneratedBlock? ContainingBlock { get; }
@@ -175,7 +175,7 @@ namespace SniffExplorer.Generators.Utilities.Generation
         }
 
         public GeneratedClass BeginClass(string name)
-            => new GeneratedClass(this, name);
+            => new(this, name);
 
         public IEnumerable<INamespaceSymbol?> CollectNamespaces()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,47 +9,41 @@ using SniffExplorer.Parsing.Types;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Implementations
 {
-    public class BlobUpdateField : IUpdateField<byte[]>
+    /// <summary>
+    /// Describes an updatefield stored as a byte array.
+    /// </summary>
+    public class BlobUpdateField : BaseUpdateField<byte[]>
     {
-        private readonly IHistory<byte[]> _values = HistoryFactory.CreateBoxed<byte[]>();
-
-        private readonly int _bitOffset;
-        private readonly int _bitCount;
-        public int BitEnd { get; }
-
-        private byte[] _currentValue;
-
-        public BlobUpdateField(int bitOffset, int byteCount)
+        // Accumulates value changes.
+        private readonly byte[] _currentValue;
+        
+        /// <summary>
+        /// Creates an instance of <see cref="BlobUpdateField"/>
+        /// </summary>
+        /// <param name="bitOffset">The offset of the first bit describing this updatefield in the <see cref="UpdateMask"/>.</param>
+        /// <param name="byteCount">The amount of bytes this blob spans.</param>
+        /// <param name="context">The parsing context.</param>
+        public BlobUpdateField(int bitOffset, int byteCount, ParsingContext context)
+            : base(bitOffset,
+                ((byteCount + 3) & ~3) / 4, // Compute the amount of bits (align up to u32 boundary)
+                context, 
+                () => HistoryFactory.Create(() => new byte[byteCount]))
         {
-            _bitOffset = bitOffset;
-            _bitCount = ((byteCount + 3) & ~3) / 4;
-            BitEnd = _bitOffset + _bitCount;
-
             _currentValue = new byte[byteCount];
         }
 
-        public void ReadValue(Packet packet, UpdateMask updateMask)
+        protected override byte[] ReadValueCore(Packet packet, UpdateMask updateMask)
         {
             var valueSpan = MemoryMarshal.Cast<byte, uint>(new Span<byte>(_currentValue));
 
-            var modified = false;
-            for (var i = 0; i < _bitCount; ++i)
+            for (var i = 0; i < updateMask.Length; ++i)
             {
-                if (!updateMask[_bitOffset + i])
-                    continue;
-
-                modified = true;
-                valueSpan[i] = packet.ReadUInt32();
+                if (updateMask[i])
+                    valueSpan[i] = packet.ReadUInt32();
             }
 
-            if (modified)
-            {
-                _values.Insert(packet.Moment, _currentValue);
-
-                _currentValue = new byte[_currentValue.Length];
-            }
+            // Return a copy of the array.
+            return _currentValue.ToArray();
         }
-
-        public IEnumerable<byte[]> Values => _values.Values;
     }
 }

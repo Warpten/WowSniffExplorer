@@ -99,7 +99,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
 
             public float? SplineElevation { get; set; }
 
-            public Vector4 Position { get; } = new Vector4();
+            public Vector4 Position { get; } = new();
 
             public uint? Time { get; set; }
         }
@@ -113,7 +113,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             public uint Time { get; set; }
             public uint? PreviousTime { get; set; }
 
-            public Vector4 Offset { get; } = new Vector4();
+            public Vector4 Offset { get; } = new();
             public uint? VehicleID { get; set; }
 
             public byte Seat { get; set; }
@@ -123,7 +123,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
         {
             public IObjectGUID GUID { get; set; }
 
-            public Vector4 Offset { get; } = new Vector4();
+            public Vector4 Offset { get; } = new();
 
             public uint Time { get; set; }
             public uint? PreviousTime { get; set; }

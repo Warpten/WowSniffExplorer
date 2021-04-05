@@ -186,7 +186,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 Text = text
             };
 
-            context.RegisterEvent(packet.Moment, @event);
+            // context.RegisterEvent(packet.Moment, @event);
         }
 
         [Parser(PacketDirection.ServerToClient, Opcode.SMSG_PLAY_SOUND)]
@@ -206,7 +206,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 Target = target
             };
 
-            context.RegisterEvent(packet.Moment, @event);
+            // context.RegisterEvent(packet.Moment, @event);
         }
     }
 }

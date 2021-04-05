@@ -50,7 +50,7 @@
 
   <Target Name="RemoveSourceGeneratedFiles" BeforeTargets="CoreCompile">
     <ItemGroup>
-      <Compile Include="Generated\**" />
+      <Compile Remove="Generated\**" />
     </ItemGroup>
   </Target>
 

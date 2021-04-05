@@ -62,9 +62,9 @@ namespace SniffExplorer.Generators.UpdateFields
             var bitCount = ((DetermineByteCount(_underlyingType) + 3) & ~3) / Unsafe.SizeOf<uint>();
 
             if (iterator != null)
-                return $"new StructuredUpdateField<{_underlyingType}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd, {bitCount}, {formattedMethodCall})";
+                return $"new StructuredUpdateField<{_underlyingType}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd, {bitCount}, context, {formattedMethodCall})";
 
-            return $"new StructuredUpdateField<{_underlyingType}>({Offset}, {bitCount}, {formattedMethodCall})";
+            return $"new StructuredUpdateField<{_underlyingType}>({Offset}, {bitCount}, context, {formattedMethodCall})";
         }
 
         private int DetermineByteCount(ITypeSymbol valueType)

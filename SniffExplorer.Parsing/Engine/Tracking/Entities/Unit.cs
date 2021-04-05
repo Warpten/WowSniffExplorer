@@ -11,9 +11,9 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IUnitData UnitData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.Creature;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.Creature;
 
-        public AuraStore Auras { get; } = new AuraStore();
+        public AuraStore Auras { get; } = new();
 
         public ClassMask Class => (ClassMask)(1 << (UnitData.Bytes0.Values.First()[1] - 1));
         public RaceMask Race => (RaceMask)(1 << (UnitData.Bytes0.Values.First()[0] - 1));
@@ -47,7 +47,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IItemData ItemData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.Item;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.Item;
 
         public Item(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
@@ -69,7 +69,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public ICorpseData CorpseData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.Item;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.Item;
 
         public Corpse(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
@@ -91,7 +91,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IContainerData ContainerData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.Container;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.Container;
 
         public Container(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
@@ -113,7 +113,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IDynamicObjectData DynamicObjectData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.DynamicObject;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.DynamicObject;
 
         public DynamicObject(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
@@ -135,7 +135,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IGameObjectData GameObjectData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.GameObject;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.GameObject;
 
         public GameObject(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
@@ -157,7 +157,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
     {
         public IAreaTriggerData AreaTriggerData { get; }
 
-        public override EntityTypeID TypeID => EntityTypeID.AreaTrigger;
+        public override EntityTypeID TypeID { get; } = EntityTypeID.AreaTrigger;
 
         public AreaTrigger(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {

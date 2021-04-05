@@ -20,9 +20,9 @@ namespace SniffExplorer.Generators.UpdateFields
             IteratorGenerator.Iterator? iterator = null)
         {
             if (iterator != null)
-                return $"new PrimitiveUpdateField<{_underlyingType}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd)";
+                return $"new PrimitiveUpdateField<{_underlyingType}>({EnumerationSymbol.Name}[{iterator} - 1].BitEnd, context)";
 
-            return $"new PrimitiveUpdateField<{_underlyingType}>({Offset})";
+            return $"new PrimitiveUpdateField<{_underlyingType}>({Offset}, context)";
         }
     }
 }
