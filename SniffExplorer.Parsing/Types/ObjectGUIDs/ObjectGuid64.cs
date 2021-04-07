@@ -65,7 +65,7 @@ namespace SniffExplorer.Parsing.Types.ObjectGUIDs
 
         private readonly ParsingContext _parsingContext;
 
-        internal unsafe ObjectGuid64(ulong value, ParsingContext parseContext)
+        internal ObjectGuid64(ulong value, ParsingContext parseContext)
         {
             _value = value;
 

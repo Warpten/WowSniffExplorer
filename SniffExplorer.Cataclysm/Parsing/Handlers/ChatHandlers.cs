@@ -99,7 +99,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 case ChatMessageType.MonsterParty:
                 case ChatMessageType.BattleNet:
                 {
-                    sourceName = packet.ReadWoWString(packet.ReadUInt32());
+                    sourceName = packet.ReadString(packet.ReadUInt32());
 
                     targetGUID = packet.ReadGUID();
                     switch (targetGUID.Type)
@@ -108,7 +108,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                         case ObjectGuidType.Vehicle:
                         case ObjectGuidType.GameObject:
                         case ObjectGuidType.Transport:
-                            targetName = packet.ReadWoWString(packet.ReadUInt32());
+                            targetName = packet.ReadString(packet.ReadUInt32());
                             break;
                     }
 
@@ -126,7 +126,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                         case ObjectGuidType.Pet:
                         case ObjectGuidType.GameObject:
                         case ObjectGuidType.Transport:
-                            sourceName = packet.ReadWoWString(packet.ReadUInt32());
+                            sourceName = packet.ReadString(packet.ReadUInt32());
                             break;
                     }
 
@@ -136,7 +136,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 {
                     if (packet.Opcode == Opcode.SMSG_GM_MESSAGECHAT)
                     {
-                        var gamemasterName = packet.ReadWoWString(packet.ReadUInt32());
+                        var gamemasterName = packet.ReadString(packet.ReadUInt32());
                     }
 
 
@@ -153,7 +153,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             if (language == uint.MaxValue) // Addon
                 packet.ReadCString(0x11); // Addon prefix
 
-            var text = packet.ReadWoWString(packet.ReadUInt32());
+            var text = packet.ReadString(packet.ReadUInt32());
             var chatTag = packet.ReadUInt8();
 
             if (chatMessageType == ChatMessageType.RaidBossEmote || chatMessageType == ChatMessageType.RaidBossWhisper)

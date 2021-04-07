@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Shared.Enums;
 
 namespace SniffExplorer.Parsing.Versions

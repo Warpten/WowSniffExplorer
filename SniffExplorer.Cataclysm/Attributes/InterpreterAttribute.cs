@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SniffExplorer.Cataclysm.Opcodes;
-using SniffExplorer.Parsing;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
 

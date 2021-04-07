@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SniffExplorer.Shared.Attributes.Descriptors
 {

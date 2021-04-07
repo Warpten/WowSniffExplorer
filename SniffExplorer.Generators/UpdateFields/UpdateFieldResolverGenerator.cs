@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using SniffExplorer.Generators.Utilities;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using SniffExplorer.Shared.Attributes.Descriptors;
 using SniffExplorer.Shared.Enums;

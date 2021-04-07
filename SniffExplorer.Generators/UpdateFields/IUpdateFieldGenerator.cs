@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Operations;
+﻿using Microsoft.CodeAnalysis;
 using SniffExplorer.Generators.Utilities;
 
 namespace SniffExplorer.Generators.UpdateFields

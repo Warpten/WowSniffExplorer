@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using SniffExplorer.Parsing.Engine.Events;
 using SniffExplorer.Parsing.Engine.Tracking;
-using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Helpers;
-using SniffExplorer.Parsing.IO;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
@@ -29,7 +23,7 @@ namespace SniffExplorer.Parsing.Engine
     /// </summary>
     public class ParsingContext
     {
-        public ParsingOptions Options { get; }
+        public ParsingOptions Options { get; set; }
 
         /// <summary>
         /// The build in which the sniff was captured.

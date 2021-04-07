@@ -1,6 +1,5 @@
 ﻿using SniffExplorer.Cataclysm.UpdateFields.Types;
 using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
-using SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Shared.Attributes.Descriptors;
 using SniffExplorer.Shared.Enums;

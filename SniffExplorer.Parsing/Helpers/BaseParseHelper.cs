@@ -2,7 +2,6 @@
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
-using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Helpers.GUIDs;
 using SniffExplorer.Parsing.Helpers.Handlers;
 using SniffExplorer.Parsing.Helpers.Opcodes;

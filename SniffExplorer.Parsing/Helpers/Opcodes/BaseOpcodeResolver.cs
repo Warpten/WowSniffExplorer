@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Reflection;
 using Microsoft.Data.Sqlite;
 using SniffExplorer.Parsing.Attributes;

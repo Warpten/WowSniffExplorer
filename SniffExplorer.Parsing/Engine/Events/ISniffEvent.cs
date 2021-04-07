@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
-using SniffExplorer.Parsing.Engine.Tracking.Entities;
-using SniffExplorer.Parsing.Types.ObjectGUIDs;
+﻿using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
 namespace SniffExplorer.Parsing.Engine.Events
 {

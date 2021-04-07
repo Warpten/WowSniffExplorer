@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
 namespace SniffExplorer.Parsing.Engine.Tracking

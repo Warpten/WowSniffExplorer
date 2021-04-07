@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SniffExplorer.Parsing.Loading.Attributes;
+﻿using SniffExplorer.Parsing.Loading.Attributes;
 
 namespace SniffExplorer.Parsing.Loading.Enums
 {

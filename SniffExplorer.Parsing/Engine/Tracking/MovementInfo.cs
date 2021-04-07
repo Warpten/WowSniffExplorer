@@ -1,5 +1,4 @@
-﻿using System;
-using SniffExplorer.Parsing.Types;
+﻿using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
 namespace SniffExplorer.Parsing.Engine.Tracking

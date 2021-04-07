@@ -1,8 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Data;
-using JetBrains.Annotations;
-using SniffExplorer.Parsing.Engine.Tracking.Entities;
+﻿using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Shared.Attributes.UI;
 
 namespace SniffExplorer.UI.Controls.Models

@@ -14,17 +14,6 @@
     </Window.CommandBindings>
 
     <DockPanel LastChildFill="True">
-        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
-            <ToolBar Loaded="HideOverFlowButton">
-                <Menu ToolBar.OverflowMode="Never">
-                    <MenuItem Header="_Load ..." VerticalAlignment="Stretch" Height="20">
-                        <MenuItem Header="... PKT File" Click="OnLoadPKT" />
-                        <MenuItem Header="... BIN File" Click="OnLoadBIN" />
-                    </MenuItem>
-                </Menu>
-            </ToolBar>
-        </ToolBarTray>
-
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock x:Name="_parseStatusText" />
         </StatusBar>

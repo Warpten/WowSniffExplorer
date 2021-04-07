@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SniffExplorer.Parsing.Engine;
+﻿using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
-using SniffExplorer.Shared.Extensions;
 
 namespace SniffExplorer.Cataclysm.Parsing.Handlers
 {
@@ -34,7 +27,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
             for (var i = 0; i < characterCount; ++i)
             {
-                var characterInfo = new CharacterInfo();
+                ref var characterInfo = ref characters[i];
 
                 characterInfo.GUID = context.Helper.GuidResolver.CreateGUID();
                 characterInfo.GuildGUID = context.Helper.GuidResolver.CreateGUID();
@@ -54,8 +47,6 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
                 characterInfo.GUID.AsBitStream().Initialize(packet, 0, 2, 6);
                 characterInfo.GuildGUID.AsBitStream().Initialize(packet, 0);
-
-                characters[i] = characterInfo;
             }
 
             packet.ResetBitReader();
@@ -91,7 +82,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 packet.Skip<byte>(); // Facial Hair
                 characterInfo.GUID.AsBitStream().Parse(packet, 7);
                 packet.Skip<byte>(); // Gender
-                characterInfo.Name = packet.ReadWoWString(characterNames[i]);
+                characterInfo.Name = packet.ReadString(characterNames[i]);
                 packet.Skip<byte>(); // Face
                 characterInfo.GUID.AsBitStream().Parse(packet, 0, 2);
                 characterInfo.GuildGUID.AsBitStream().Parse(packet, 1, 7);

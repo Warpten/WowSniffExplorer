@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using SniffExplorer.Parsing.Types;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Implementations

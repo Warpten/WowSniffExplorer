@@ -2,10 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,7 +11,6 @@ using Microsoft.Win32;
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Loading;
-using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.UI.Reactive;
 
 namespace SniffExplorer.UI
@@ -33,24 +29,19 @@ namespace SniffExplorer.UI
             _uiScheduler = new DispatcherScheduler(Application.Current.Dispatcher);
         }
 
-        #region UI event handlers
-        private void OnLoadPKT(object sender, RoutedEventArgs e)
-            => HandleParseRequest("PKT Files (.pkt)|*.pkt");
-
-        private void OnLoadBIN(object sender, RoutedEventArgs e)
-            => HandleParseRequest("BIN Files (.bin)|*.bin");
-
-        private void HandleParseRequest(string fileSelectionFilter)
+        public MainWindow(string filePath, ParsingOptions options)
+            : this()
         {
-            try {
-                var fileName = SelectSniffFile(fileSelectionFilter);
-
-                ProcessFileAsync(fileName)
-                    .Delay(TimeSpan.FromMilliseconds(10), _uiScheduler)
+            try
+            {
+                ProcessFileAsync(filePath, options)
+                    .ObserveOn(_uiScheduler)
                     .Subscribe(data => {
                         OnParseCompleted(data.Context, data.Statistics);
                     });
-            } catch (InvalidOperationException _) {
+            }
+            catch (InvalidOperationException _)
+            {
 
             }
         }
@@ -65,9 +56,8 @@ namespace SniffExplorer.UI
             _playerDisplayControl.ViewModel.Entities = new ObservableCollection<Player>(entities.OfType<Player>());
             _unitDisplayControl.ViewModel.Entities = new ObservableCollection<Creature>(entities.OfType<Creature>());
         }
-        #endregion
 
-        private IObservable<(ParsingContext Context, ParsingStatistics Statistics)> ProcessFileAsync(string filePath)
+        private IObservable<(ParsingContext Context, ParsingStatistics Statistics)> ProcessFileAsync(string filePath, ParsingOptions options)
         {
             var sniffFile = new SniffFile(filePath);
             _parseStatusText.Text = $"Detected client build {sniffFile!.ClientBuild}.";
@@ -83,18 +73,9 @@ namespace SniffExplorer.UI
                     parser.Dispose();
                 });
 
-            return parser.Run();
+            return parser.Run(options);
         }
-
-        private string SelectSniffFile(string filter)
-        {
-            var dialog = new OpenFileDialog() { Filter = filter };
-            if (dialog.ShowDialog(this)!.Value)
-                return dialog.FileName;
-
-            throw new InvalidOperationException("File not selected or not found");
-        }
-
+        
         #region Tablet PC bullshit
         private bool _systemMenuAlignment;
 

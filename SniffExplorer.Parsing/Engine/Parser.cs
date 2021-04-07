@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Loading;
-using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
 
 namespace SniffExplorer.Parsing.Engine
@@ -96,9 +95,11 @@ namespace SniffExplorer.Parsing.Engine
             _file.Dispose();
         }
 
-        public IObservable<(ParsingContext Context, ParsingStatistics Statistics)> Run()
+        public IObservable<(ParsingContext Context, ParsingStatistics Statistics)> Run(ParsingOptions options)
         {
             var contextSubject = new Subject<(ParsingContext, ParsingStatistics)>();
+
+            _parsingContext.Options = options;
 
             // Collect all the packets into an observable.
 

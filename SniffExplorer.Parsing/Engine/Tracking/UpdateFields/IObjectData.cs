@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-using SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Types;
-using SniffExplorer.Parsing.Types;
-using SniffExplorer.Parsing.Types.ObjectGUIDs;
+﻿using SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Types;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
 {

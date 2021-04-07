@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;

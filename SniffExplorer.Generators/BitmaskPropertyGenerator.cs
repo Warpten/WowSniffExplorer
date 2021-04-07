@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Scriban;
-using SniffExplorer.Generators.UpdateFields;
 using SniffExplorer.Generators.Utilities;
 using SniffExplorer.Shared.Attributes.UI;
 

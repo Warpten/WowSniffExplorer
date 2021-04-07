@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using SniffExplorer.Generators.Utilities;
 
 namespace SniffExplorer.Generators.UpdateFields

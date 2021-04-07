@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <None Remove="Resources\Alliance.png" />
+    <None Remove="Resources\inv_misc_punchcards_blue.png" />
+    <None Remove="Resources\Merriweather-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,7 +45,9 @@
     <Resource Include="Resources\DemonHunter.png" />
     <Resource Include="Resources\Druid.png" />
     <Resource Include="Resources\Hunter.png" />
+    <Resource Include="Resources\inv_misc_punchcards_blue.png" />
     <Resource Include="Resources\Mage.png" />
+    <Resource Include="Resources\Merriweather-Regular.ttf" />
     <Resource Include="Resources\Monk.png" />
     <Resource Include="Resources\Paladin.png" />
     <Resource Include="Resources\Priest.png" />

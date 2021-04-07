@@ -12,4 +12,7 @@
     <BitmapImage x:Key="IconMonk" UriSource="Resources/Monk.png" />
     <BitmapImage x:Key="IconDruid" UriSource="Resources/Druid.png" />
     <BitmapImage x:Key="IconDemonHunter" UriSource="Resources/DemonHunter.png" />
+
+    <BitmapImage x:Key="AppIcon" UriSource="Resources/inv_misc_punchcards_blue.png" />
+
 </ResourceDictionary>

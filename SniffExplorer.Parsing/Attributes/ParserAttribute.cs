@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
 

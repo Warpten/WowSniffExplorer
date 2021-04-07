@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using SniffExplorer.Parsing.Engine;
-using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Shared.Attributes.Descriptors;

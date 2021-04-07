@@ -1,5 +1,4 @@
-﻿using SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Types;
-using SniffExplorer.Parsing.Types.ObjectGUIDs;
+﻿using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
 {

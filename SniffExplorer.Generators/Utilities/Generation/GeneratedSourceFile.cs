@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Security;
-using System.Text;
 using Microsoft.CodeAnalysis;
 
 namespace SniffExplorer.Generators.Utilities.Generation

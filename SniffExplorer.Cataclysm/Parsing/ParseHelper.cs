@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using SniffExplorer.Cataclysm.Attributes;
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;

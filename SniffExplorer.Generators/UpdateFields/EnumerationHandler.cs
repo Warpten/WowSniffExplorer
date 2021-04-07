@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using SniffExplorer.Generators.UpdateFields;
 using SniffExplorer.Generators.Utilities;
 using SniffExplorer.Shared.Attributes.Descriptors;
 

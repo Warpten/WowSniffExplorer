@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive.Linq;
 using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
@@ -12,13 +13,17 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 
         public override EntityTypeID TypeID => EntityTypeID.Player;
 
-        public uint Level => UnitData.Level.Values.Last();
+        public uint Level { get; set; }
 
         public Player(IObjectGUID guid, ParsingContext context) : base(guid, context)
         {
             var playerData = context.Helper.UpdateFieldProvider.CreatePlayerData(guid);
 
             PlayerData = playerData ?? throw new InvalidOperationException();
+
+            UnitData.Level.ValueUpdate.Take(1).Subscribe(tuple => {
+                Level = tuple.Value;
+            });
         }
 
         public override void ProcessValuesUpdate(Packet packet, UpdateMask updateMask)

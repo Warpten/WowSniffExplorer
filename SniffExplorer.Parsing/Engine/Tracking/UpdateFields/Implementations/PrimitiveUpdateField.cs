@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SniffExplorer.Parsing.Types;
-using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Implementations
 {

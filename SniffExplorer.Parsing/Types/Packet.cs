@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using SniffExplorer.Parsing.Engine;
-using SniffExplorer.Parsing.IO;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
@@ -25,9 +22,7 @@ namespace SniffExplorer.Parsing.Types
 
         private readonly ParsingContext _context;
         private readonly Stream _dataStream;
-
-        public ParsingContext Context => _context;
-
+        
 #if DEBUG
         private static int _indexGenerator = 0;
         public int Index { get; }
@@ -62,7 +57,7 @@ namespace SniffExplorer.Parsing.Types
             return false;
         }
 
-        internal T Read<T>() where T : unmanaged
+        private T Read<T>() where T : unmanaged
         {
             Span<byte> data = stackalloc byte[Unsafe.SizeOf<T>()];
             _dataStream.Read(data);
@@ -95,6 +90,12 @@ namespace SniffExplorer.Parsing.Types
             return guid;
         }
 
+        /// <summary>
+        /// Reads a null-terminated C string from the packet.
+        /// </summary>
+        /// <param name="encoding">The encoding of the string.</param>
+        /// <param name="limit">The maximum length of said string.</param>
+        /// <returns></returns>
         public string ReadCString(Encoding encoding, int? limit = default)
         {
             var bytes = new List<byte>();
@@ -118,6 +119,7 @@ namespace SniffExplorer.Parsing.Types
             return encoding.GetString(bytes.ToArray());
         }
 
+        /// <see cref="ReadCString(Encoding, int?)"/>
         public string ReadCString(int? limit = default) => ReadCString(Encoding.UTF8, limit);
 
         public void Skip<T>(int count = 1) where T : unmanaged
@@ -125,7 +127,12 @@ namespace SniffExplorer.Parsing.Types
             _dataStream.Position += Unsafe.SizeOf<T>() * count;
         }
 
-        public string ReadWoWString(uint length)
+        /// <summary>
+        /// Reads a string for which the size is known (fixed, or previously sent in the packet).
+        /// </summary>
+        /// <param name="length">The length of the string.</param>
+        /// <returns>The string as read from the packet.</returns>
+        public string ReadString(uint length)
         {
             var bytes = ReadBytes(length);
             for (var i = 0; i < length; ++i)
@@ -145,6 +152,10 @@ namespace SniffExplorer.Parsing.Types
         private byte _bitpos = 8;
         private byte _curbitval;
 
+        /// <summary>
+        /// Reads a bit from the stream. Does not necessarily advance the bit stream.
+        /// </summary>
+        /// <returns></returns>
         public bool ReadBit()
         {
             if (_bitpos == 8)
@@ -176,26 +187,17 @@ namespace SniffExplorer.Parsing.Types
 
         public ulong ReadPackedUInt64()
         {
-            return ReadPackedUInt64(ReadUInt8());
-        }
-
-        private ulong ReadPackedUInt64(byte mask)
-        {
+            var mask = ReadUInt8();
             if (mask == 0)
                 return 0;
 
-            ulong res = 0;
+            Span<byte> parts = stackalloc byte[8];
+            
+            for (var i = 0; i < 8; ++i)
+                if ((mask & (1 << i)) != 0)
+                    parts[i] = ReadUInt8();
 
-            int i = 0;
-            while (i < 8)
-            {
-                if ((mask & 1 << i) != 0)
-                    res += (ulong)ReadUInt8() << (i * 8);
-
-                i++;
-            }
-
-            return res;
+            return MemoryMarshal.Read<ulong>(parts);
         }
 
         public bool CanRead() => _dataStream.Position != _dataStream.Length;

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Windows.Data;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
-using SniffExplorer.Shared.Attributes.UI;
 
 namespace SniffExplorer.UI.Controls.Models
 {
