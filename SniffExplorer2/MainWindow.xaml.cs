@@ -68,8 +68,6 @@ namespace SniffExplorer.UI
                 .Subscribe(opcode => {
                     _parseStatusText.Text = $"(#{opcode.Index:N0}) Parsed {opcode.Opcode}.";
                 }, () => {
-                    _parseStatusText.Text = "Aggregating data ...";
-
                     parser.Dispose();
                 });
 

@@ -60,5 +60,23 @@ namespace SniffExplorer.UI.Windows
 
             Close();
         }
+
+        private void HandleDragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+        }
+
+        private void HandleDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNames)
+            {
+                e.Handled = fileNames[0].EndsWith(".pkt") || fileNames[0].EndsWith(".bin");
+                if (e.Handled)
+                {
+                    FilePath = fileNames[0];
+                }
+            }
+        }
     }
 }
