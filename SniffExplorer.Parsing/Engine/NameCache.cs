@@ -1,5 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Subjects;
+using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
+using Observable = System.Reactive.Linq.Observable;
 
 namespace SniffExplorer.Parsing.Engine
 {

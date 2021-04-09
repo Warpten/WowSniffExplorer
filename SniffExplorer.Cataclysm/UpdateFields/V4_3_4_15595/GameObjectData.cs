@@ -10,7 +10,7 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
     {
         [DescriptorValue(ValueType = typeof(IObjectGUID))] CreatedBy,
         [DescriptorValue(ValueType = typeof(int))]         DisplayID,
-        [DescriptorValue(ValueType = typeof(int))]         Flags,
+        [DescriptorValue(ValueType = typeof(uint))]        Flags,
         [DescriptorValue(ValueType = typeof(float), Arity = 4)] ParentRotation,
         [DescriptorValue(ValueType = typeof(ushort[]))]    Dynamic,
         [DescriptorValue(ValueType = typeof(int))]         Faction,

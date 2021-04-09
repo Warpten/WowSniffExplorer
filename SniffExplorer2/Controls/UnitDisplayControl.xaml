@@ -7,6 +7,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:SniffExplorer.UI.Converters"
              xmlns:ui="clr-namespace:SniffExplorer.UI"
+             xmlns:commands="clr-namespace:SniffExplorer.UI.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -14,7 +15,7 @@
         <converters:EnumConverter x:Key="enumConverter" />
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,24 +25,25 @@
         <GroupBox Header="Filters" Grid.Row="0">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Grid.Column="0"  Padding="0,0,5,5">
+                <Border Grid.Row="0" Grid.Column="0"  Padding="5,0,5,0">
                     <TextBlock>Unit name:</TextBlock>
                 </Border>
 
-                <Border Grid.Row="0" Grid.Column="1"  Padding="0,0,5,5">
+                <Border Grid.Row="0" Grid.Column="1"  Padding="0,0,0,0">
                     <TextBox Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
 
-                <TextBlock Grid.Column="0" Grid.Row="1" Padding="0,0,5,0">Entry:</TextBlock>
-                <TextBox Grid.Column="1"  Grid.Row="1" Text="{Binding EntryFilter, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Column="2" Grid.Row="0" Padding="5,0,5,0">Entry:</TextBlock>
+                <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding EntryFilter, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </GroupBox>
 
@@ -80,11 +82,11 @@
                                 </Style>
                             </StackPanel.Resources>
 
-                            <Button ToolTip="Movement data" Background="Transparent">
+                            <Button ToolTip="Movement data" Background="Transparent" Command="{Binding ShowMovement}" CommandParameter="{Binding}">
                                 <Image Source="{iconPacks:MaterialImage Kind=MapOutline}" Height="16" Width="16" />
                             </Button>
 
-                            <Button ToolTip="Spells" Background="Transparent">
+                            <Button ToolTip="Spells" Background="Transparent" Command="{Binding ShowSpells}" CommandParameter="{Binding}">
                                 <Image Source="{iconPacks:MaterialImage Kind=AutoFix}" Height="16" Width="16" />
                             </Button>
 

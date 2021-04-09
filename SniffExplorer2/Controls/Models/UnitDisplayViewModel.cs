@@ -1,9 +1,20 @@
-﻿using SniffExplorer.Parsing.Engine.Tracking.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using SniffExplorer.Parsing.Engine.Tracking.Entities;
+using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Shared.Attributes.UI;
+using SniffExplorer.UI.Commands;
 
 namespace SniffExplorer.UI.Controls.Models
 {
-    public partial class UnitDisplayViewModel : EntityViewModel<Creature, UnitDisplayViewModel>
+    public class DisplayCreature : EntityDisplay<Creature>
+    {
+        public string Name => Entity.Name;
+        public uint Entry => Entity.Entry;
+    }
+
+    public partial class UnitDisplayViewModel : EntityViewModel<DisplayCreature, Creature, UnitDisplayViewModel>
     {
         [NotifyingProperty(PropertyName = "EntryFilter")]
         private string _entryFilter;

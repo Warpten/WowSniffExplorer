@@ -15,12 +15,12 @@ namespace SniffExplorer.Parsing.Engine.Tracking
 
         public IEntity this[IObjectGUID guid]
         {
-            get => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(guid, EntityTypeID.Unknown));
-            set => _entityStore.AddOrUpdate(guid, key => value, (key, oldValue) => oldValue);
+            get => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, EntityTypeID.Unknown));
+            set => _entityStore.AddOrUpdate(guid, _ => value, (_, oldValue) => oldValue);
         }
 
         public IEntity this[IObjectGUID guid, EntityTypeID entityTypeID]
-            => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(guid, entityTypeID));
+            => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, entityTypeID));
 
         /// <summary>
         /// 

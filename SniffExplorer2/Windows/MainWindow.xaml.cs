@@ -5,15 +5,12 @@ using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-
-using Microsoft.Win32;
-
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Loading;
 using SniffExplorer.UI.Reactive;
 
-namespace SniffExplorer.UI
+namespace SniffExplorer.UI.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -34,11 +31,15 @@ namespace SniffExplorer.UI
         {
             try
             {
-                ProcessFileAsync(filePath, options)
-                    .ObserveOn(_uiScheduler)
-                    .Subscribe(data => {
-                        OnParseCompleted(data.Context, data.Statistics);
-                    });
+                var sniffFile = new SniffFile(filePath);
+                _parseStatusText.Text = $"Detected client build {sniffFile!.ClientBuild}.";
+
+                Observable.Start(() =>
+                {
+                    ProcessFileAsync(sniffFile, options)
+                        .ObserveOn(_uiScheduler)
+                        .Subscribe(data => { OnParseCompleted(data.Context, data.Statistics); });
+                }, _uiScheduler);
             }
             catch (InvalidOperationException _)
             {
@@ -53,15 +54,12 @@ namespace SniffExplorer.UI
 
             var entities = context.ObjectManager.AsCollection();
             
-            _playerDisplayControl.ViewModel.Entities = new ObservableCollection<Player>(entities.OfType<Player>());
-            _unitDisplayControl.ViewModel.Entities = new ObservableCollection<Creature>(entities.OfType<Creature>());
+            _playerDisplayControl.ViewModel.Entities = entities.OfType<Player>();
+            _unitDisplayControl.ViewModel.Entities = entities.OfType<Creature>();
         }
 
-        private IObservable<(ParsingContext Context, ParsingStatistics Statistics)> ProcessFileAsync(string filePath, ParsingOptions options)
+        private IObservable<(ParsingContext Context, ParsingStatistics Statistics)> ProcessFileAsync(SniffFile sniffFile, ParsingOptions options)
         {
-            var sniffFile = new SniffFile(filePath);
-            _parseStatusText.Text = $"Detected client build {sniffFile!.ClientBuild}.";
-
             var parser = Parser.Of(sniffFile);
 
             parser.PacketParsed.Sample(TimeSpan.FromMilliseconds(5), _uiScheduler)

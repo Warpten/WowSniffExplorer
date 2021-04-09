@@ -9,7 +9,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Loading;
@@ -131,6 +130,7 @@ namespace SniffExplorer.Parsing.Engine
 
                     // Collect all the observables and join them.
                     return new ForkJoinObservable<(Opcode Opcode, int Index)>(fileObservable);
+                    // return fileObservable.ForkJoin();
                 }).TimeInterval();
 
                 // Subscribe on the overall execution to get parse statistics.
@@ -189,7 +189,7 @@ namespace SniffExplorer.Parsing.Engine
             var atomicRequiredCompletedCount = count;
             var results = new TSource[count];
 
-            Parallel.For(0, count, (index, state) =>
+            for (var index = 0; index < count; ++index)
             {
                 var currentIndex = index;
                 var source = _sources[index];
@@ -204,8 +204,12 @@ namespace SniffExplorer.Parsing.Engine
                     },
                     error => {
                         Volatile.Write(ref finished, true);
-                        observer.OnError(error);
-                        group.Dispose();
+
+                        if (Interlocked.Exchange(ref atomicRequiredCompletedCount, 0) > 0)
+                        {
+                            observer.OnError(error);
+                            group.Dispose();
+                        }
                     },
                     () => {
                         if (Volatile.Read(ref finished))
@@ -213,7 +217,9 @@ namespace SniffExplorer.Parsing.Engine
 
                         if (!hasResults[currentIndex])
                         {
-                            observer.OnCompleted();
+                            if (Interlocked.Exchange(ref atomicRequiredCompletedCount, 0) > 0)
+                                observer.OnCompleted();
+
                             return;
                         }
 
@@ -224,7 +230,7 @@ namespace SniffExplorer.Parsing.Engine
                         observer.OnNext(results);
                         observer.OnCompleted();
                     }));
-            });
+            }
             return group;
         }
     }

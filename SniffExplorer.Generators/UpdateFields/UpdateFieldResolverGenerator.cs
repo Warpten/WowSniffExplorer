@@ -138,6 +138,9 @@ namespace SniffExplorer.Generators.UpdateFields
 
                         using (sourceGenerator.BlockInvariant($"public void ProcessValuesUpdate(Packet packet, UpdateMask updateMask)"))
                         {
+                            sourceGenerator.AppendLineInvariant("if (!updateMask.Any()) return;");
+                            sourceGenerator.AppendLine();
+
                             var iteratorGenerator = new IteratorGenerator();
 
                             foreach (var property in handler.Properties)

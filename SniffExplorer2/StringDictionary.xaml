@@ -41,5 +41,7 @@
     <system:String x:Key="Vulpera">Vulpera</system:String>
 
     <system:String x:Key="Pandaren">Pandaren</system:String>
-    
+
+    <system:String x:Key="ApplicationTitle">WowPacketExplorer</system:String>
+
 </ResourceDictionary>
