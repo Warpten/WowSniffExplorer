@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Data;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
-namespace SniffExplorer.UI
+namespace SniffExplorer.UI.Converters
 {
-    public class GuidValueConverter : IValueConverter
+    public class GuidConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

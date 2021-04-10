@@ -6,12 +6,10 @@
              xmlns:local="clr-namespace:SniffExplorer.UI.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:SniffExplorer.UI.Converters"
-             xmlns:ui="clr-namespace:SniffExplorer.UI"
-             xmlns:commands="clr-namespace:SniffExplorer.UI.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <ui:GuidValueConverter x:Key="guidValueConverter" />
+        <converters:GuidConverter x:Key="guidValueConverter" />
         <converters:EnumConverter x:Key="enumConverter" />
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </UserControl.Resources>

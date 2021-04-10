@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -39,7 +40,7 @@ namespace SniffExplorer.UI.Windows
                     ProcessFileAsync(sniffFile, options)
                         .ObserveOn(_uiScheduler)
                         .Subscribe(data => { OnParseCompleted(data.Context, data.Statistics); });
-                }, _uiScheduler);
+                }, TaskPoolScheduler.Default);
             }
             catch (InvalidOperationException _)
             {

@@ -72,6 +72,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Binding\" />
+  </ItemGroup>
+
   <!-- Compiler-generated files go on disk -->
   <PropertyGroup>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>

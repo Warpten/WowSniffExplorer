@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SniffExplorer.UI.Controls"
-             xmlns:ui="clr-namespace:SniffExplorer.UI"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:SniffExplorer.UI.Converters"
              mc:Ignorable="d" 
@@ -12,7 +11,7 @@
     <UserControl.CommandBindings>
     </UserControl.CommandBindings>
     <UserControl.Resources>
-        <ui:GuidValueConverter x:Key="guidValueConverter" />
+        <converters:GuidConverter x:Key="guidValueConverter" />
         <converters:EnumConverter x:Key="enumConverter" />
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
 
