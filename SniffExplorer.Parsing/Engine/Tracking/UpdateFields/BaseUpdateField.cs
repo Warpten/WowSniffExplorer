@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using SniffExplorer.Parsing.Types;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
@@ -16,8 +17,8 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
         /// <summary>
         /// An observable that emits a value whenever a new value for this descriptor is received.
         /// </summary>
-        public IObservable<(DateTime Moment, T Value)> ValueUpdate { get; }
-
+        public IObservable<(DateTime Moment, T Value)> ValueChanges { get; }
+        
         private readonly int _bitOffset;
         private readonly int _bitCount;
 
@@ -45,7 +46,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
             _valueSubject = new(1);
 
             BitEnd = bitOffset + bitCount;
-            ValueUpdate = _valueSubject;
+            ValueChanges = _valueSubject;
             
             if (!context.Options.DiscardUpdateFields)
             {

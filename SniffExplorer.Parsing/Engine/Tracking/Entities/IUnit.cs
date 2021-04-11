@@ -1,4 +1,5 @@
-﻿using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
+﻿using System.Dynamic;
+using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Types.Enums;
 
 namespace SniffExplorer.Parsing.Engine.Tracking.Entities

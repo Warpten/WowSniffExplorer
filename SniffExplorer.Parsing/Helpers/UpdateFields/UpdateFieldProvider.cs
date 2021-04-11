@@ -18,6 +18,7 @@ namespace SniffExplorer.Parsing.Helpers.UpdateFields
         private readonly Func<ParsingContext, IGameObjectData>? _gameObjectDataBuilder;
         private readonly Func<ParsingContext, IUnitData>? _unitDataBuilder;
         private readonly Func<ParsingContext, IPlayerData>? _playerDataBuilder;
+        private readonly Func<ParsingContext, IActivePlayerData>? _activePlayerDataBuilder;
         private readonly Func<ParsingContext, ICorpseData>? _corpseDataBuilder;
         private readonly Func<ParsingContext, IAreaTriggerData>? _areaTriggerDataBuilder;
 
@@ -43,6 +44,7 @@ namespace SniffExplorer.Parsing.Helpers.UpdateFields
                 TryBindLambda(ref _containerDataBuilder, assemblyType);
                 TryBindLambda(ref _unitDataBuilder, assemblyType);
                 TryBindLambda(ref _playerDataBuilder, assemblyType);
+                TryBindLambda(ref _activePlayerDataBuilder, assemblyType);
                 TryBindLambda(ref _areaTriggerDataBuilder, assemblyType);
                 TryBindLambda(ref _dynamicObjectDataBuilder, assemblyType);
                 TryBindLambda(ref _gameObjectDataBuilder, assemblyType);
@@ -80,6 +82,9 @@ namespace SniffExplorer.Parsing.Helpers.UpdateFields
 
         public IPlayerData? CreatePlayerData(IObjectGUID guid)
             => _playerDataBuilder?.Invoke(_context);
+
+        public IActivePlayerData? CreateActivePlayerData(IObjectGUID guid)
+            => _activePlayerDataBuilder?.Invoke(_context);
 
         public IAreaTriggerData? CreateAreaTriggerData(IObjectGUID guid)
             => _areaTriggerDataBuilder?.Invoke(_context);

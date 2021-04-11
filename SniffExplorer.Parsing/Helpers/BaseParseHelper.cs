@@ -64,6 +64,6 @@ namespace SniffExplorer.Parsing.Helpers
         }
 
         public abstract EntityTypeID ResolveTypeID(byte value);
-        public abstract IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID);
+        public abstract IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID, bool isSelf);
     }
 }

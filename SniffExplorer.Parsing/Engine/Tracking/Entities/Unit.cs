@@ -15,7 +15,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 
         public RaceMask Race { get; private set; }
         public ClassMask Class { get; private set; }
-
+        
         public override EntityTypeID TypeID { get; } = EntityTypeID.Creature;
 
         protected Unit(IObjectGUID guid, ParsingContext context) : base(guid, context)
@@ -24,9 +24,12 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 
             UnitData = unitData ?? throw new InvalidOperationException();
 
-            UnitData.Bytes0.ValueUpdate.Take(1).Subscribe(tuple => {
-                Class = (ClassMask)(1 << (tuple.Value[1] - 1));
-                Race = (RaceMask) (1 << (tuple.Value[0] - 1));
+            UnitData.Bytes0.ValueChanges.Take(1).Subscribe(tuple => {
+                if (tuple.Value[1] != 0)
+                    Class = (ClassMask)(1 << (tuple.Value[1] - 1));
+
+                if (tuple.Value[0] != 0)
+                    Race = (RaceMask) (1 << (tuple.Value[0] - 1));
             });
         }
 

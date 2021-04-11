@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Input;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
+using SniffExplorer.Parsing.Types.Enums;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Shared.Attributes.UI;
 using SniffExplorer.UI.Commands;

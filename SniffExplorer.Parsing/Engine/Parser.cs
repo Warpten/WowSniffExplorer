@@ -8,10 +8,13 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
+using System.Threading.Tasks;
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Loading;
+using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
 
 namespace SniffExplorer.Parsing.Engine
@@ -104,9 +107,10 @@ namespace SniffExplorer.Parsing.Engine
 
             Observable.Start(() =>
             {
+                var taskPoolScheduler = new TaskPoolScheduler(new TaskFactory(OrderedTaskScheduler.Default));
+
                 var executionObservable = Observable.Defer(() =>
                 {
-                    // Enumerates all the packets in the file, in the order in which they appear.
                     var fileObservable = _file.Enumerate(_parsingContext)
                         .Select((packet, index) =>
                         {
@@ -115,8 +119,8 @@ namespace SniffExplorer.Parsing.Engine
                             {
                                 _parsingContext.Helper.Handlers.Process(packet);
                                 return (packet.Opcode, Index: index);
-                                
-                            }, TaskPoolScheduler.Default);
+
+                            }, TaskPoolScheduler.Default); // taskPoolScheduler);
 
                             // And subscribe to it for UI feedback.
                             atomicOperation.Subscribe(results =>

@@ -23,40 +23,40 @@
         </Style>
         <Style x:Key="ClassIcon" TargetType="{x:Type Image}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Class}" Value="Warrior">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Warrior">
                     <Setter Property="Source" Value="{StaticResource IconWarrior}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Paladin">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Paladin">
                     <Setter Property="Source" Value="{StaticResource IconPaladin}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Hunter">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Hunter">
                     <Setter Property="Source" Value="{StaticResource IconHunter}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Rogue">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Rogue">
                     <Setter Property="Source" Value="{StaticResource IconRogue}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Priest">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Priest">
                     <Setter Property="Source" Value="{StaticResource IconPriest}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="DeathKnight">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="DeathKnight">
                     <Setter Property="Source" Value="{StaticResource IconDeathKnight}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Shaman">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Shaman">
                     <Setter Property="Source" Value="{StaticResource IconShaman}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Mage">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Mage">
                     <Setter Property="Source" Value="{StaticResource IconMage}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Warlock">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Warlock">
                     <Setter Property="Source" Value="{StaticResource IconWarlock}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Monk">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Monk">
                     <Setter Property="Source" Value="{StaticResource IconMonk}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="Druid">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="Druid">
                     <Setter Property="Source" Value="{StaticResource IconDruid}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Class}" Value="DemonHunter">
+                <DataTrigger Binding="{Binding Class, Mode=OneTime}" Value="DemonHunter">
                     <Setter Property="Source" Value="{StaticResource IconDemonHunter}" />
                 </DataTrigger>
             </Style.Triggers>
@@ -305,12 +305,12 @@
 
                         <TextBlock Grid.Row="0" Grid.Column="1" Height="Auto">
                             <TextBlock.Inlines>
-                                <Run FontWeight="Bold" FontSize="16" Text="{Binding Name, Mode=OneWay}" />
+                                <Run FontWeight="Bold" FontSize="16" Text="{Binding Name, Mode=OneTime}" />
                                 <Run FontSize="12" Text="Level" />
-                                <Run FontSize="12" Text="{Binding Level, Mode=OneWay}" />
+                                <Run FontSize="12" Text="{Binding Level, Mode=OneTime}" />
                                 <!-- TODO: Localize these (pull out names from resource dictionaries) -->
-                                <Run FontSize="12" Text="{Binding Race, Mode=OneWay, Converter={StaticResource enumConverter}}" />
-                                <Run FontSize="12" Text="{Binding Class, Mode=OneWay, Converter={StaticResource enumConverter}}" />
+                                <Run FontSize="12" Text="{Binding Race, Mode=OneTime, Converter={StaticResource enumConverter}}" />
+                                <Run FontSize="12" Text="{Binding Class, Mode=OneTime, Converter={StaticResource enumConverter}}" />
                             </TextBlock.Inlines>
                         </TextBlock>
 

@@ -54,8 +54,9 @@ namespace SniffExplorer.Parsing.Helpers
         /// </summary>
         /// <param name="objectGUID"></param>
         /// <param name="typeID"></param>
+        /// <param name="isSelf"></param>
         /// <returns></returns>
-        public IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID);
+        public IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID, bool isSelf);
 
         public EntityTypeID ResolveTypeID(byte value);
     }

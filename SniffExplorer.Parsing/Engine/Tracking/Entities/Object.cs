@@ -1,4 +1,5 @@
-﻿using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
+﻿using System.Security.Cryptography.X509Certificates;
+using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 
@@ -17,7 +18,6 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
         public IObjectGUID Guid { get; }
 
         public IObjectData ObjectData { get; }
-        public bool IsSelf { get; set; }
 
         public string? Name => _context.NameCache[Guid];
 

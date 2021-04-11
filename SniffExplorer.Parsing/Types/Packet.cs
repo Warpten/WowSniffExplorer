@@ -90,6 +90,18 @@ namespace SniffExplorer.Parsing.Types
             return guid;
         }
 
+        public Vector3 ReadVector3()
+            => new(ReadSingle(), ReadSingle(), ReadSingle());
+
+        public Vector3 ReadPackedVector3()
+        {
+            int packed = ReadInt32();
+            float x = ((packed & 0x7FF) << 21 >> 21) * 0.25f;
+            float y = ((((packed >> 11) & 0x7FF) << 21) >> 21) * 0.25f;
+            float z = ((packed >> 22 << 22) >> 22) * 0.25f;
+            return new(x, y, z);
+        }
+
         /// <summary>
         /// Reads a null-terminated C string from the packet.
         /// </summary>

@@ -19,6 +19,6 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
     {
         public IEnumerable<T> Values { get; }
 
-        public IObservable<(DateTime Moment, T Value)> ValueUpdate { get; }
+        public IObservable<(DateTime Moment, T Value)> ValueChanges { get; }
     }
 }

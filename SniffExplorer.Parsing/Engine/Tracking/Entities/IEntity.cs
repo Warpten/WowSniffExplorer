@@ -12,9 +12,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
         /// Object type as seen in JamCliObjCreate.
         /// </summary>
         public EntityTypeID TypeID { get; }
-
-        public bool IsSelf { get; set; }
-
+        
         public void ProcessValuesUpdate(Packet packet, UpdateMask updateMask);
     }
 }

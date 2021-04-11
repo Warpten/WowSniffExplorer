@@ -24,7 +24,12 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
         [DescriptorValue(ValueType = typeof(VisibleItem), Arity = 19)] VisibleItems,
         [DescriptorValue(ValueType = typeof(uint))] ChosenTitle,
         [DescriptorValue(ValueType = typeof(uint))] FakeInebriation,
-        [DescriptorValue(ValueType = typeof(uint))] FIELD_PAD_0,
+        [DescriptorValue(ValueType = typeof(uint))] FIELD_PAD_0
+    }
+
+    [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(IActivePlayerData))]
+    public enum ActivePlayerField
+    {
         [DescriptorValue(ValueType = typeof(IObjectGUID), Arity = 23 + 16 + 28 + 7)] InventorySlots,
         [DescriptorValue(ValueType = typeof(IObjectGUID), Arity = 12)] VendorBuyBackSlots,
         [DescriptorValue(ValueType = typeof(IObjectGUID))] Farsight,

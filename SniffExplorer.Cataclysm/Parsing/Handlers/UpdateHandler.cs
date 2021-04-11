@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
@@ -9,7 +10,7 @@ using SniffExplorer.Shared.Enums;
 
 namespace SniffExplorer.Cataclysm.Parsing.Handlers
 {
-    public class UpdateHandler
+    public static class UpdateHandler
     {
         enum UpdateType : uint
         {
@@ -84,22 +85,25 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
         private static void HandleCreateObject(ParsingContext context, Packet packet, IObjectGUID guid, ushort map, UpdateType updateType)
         {
             var objectType = context.Helper.ResolveTypeID(packet.ReadUInt8());
-            var entity = context.ObjectManager[guid, objectType];
 
-            HandleMovementUpdate(context, packet, entity, map);
+            var entity = HandleMovementUpdate(context, packet, guid, objectType, map);
             HandleValuesUpdate(context, packet, entity, map);
         }
 
-        private static void HandleMovementUpdate(ParsingContext context, Packet packet, IEntity entity, ushort map)
+        private static IEntity HandleMovementUpdate(ParsingContext context, Packet packet, IObjectGUID guid, EntityTypeID entityTypeID, ushort map)
         {
-            var movementSnapshot = entity.MovementInfo[packet.Moment];
-
-            movementSnapshot.PlayHoverAnim = packet.ReadBit();
-            movementSnapshot.SuppressedGreetings = packet.ReadBit();
+            var playHoverAnim = packet.ReadBit();
+            var suppressedGreetings = packet.ReadBit();
             var hasRotation = packet.ReadBit();
             var hasAnimKits = packet.ReadBit();
             var hasTargetGUID = packet.ReadBit();
-            entity.IsSelf = packet.ReadBit();
+
+            var entity = context.ObjectManager[guid, entityTypeID, packet.ReadBit()];
+            var movementSnapshot = entity.MovementInfo[packet.Moment];
+
+            movementSnapshot.PlayHoverAnim = playHoverAnim;
+            movementSnapshot.SuppressedGreetings = suppressedGreetings;
+
             var hasVehicleData = packet.ReadBit();
             var hasLivingData = packet.ReadBit();
             var stopFrameCount = packet.ReadBits(24);
@@ -210,6 +214,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
             if (hasTransport)
                 movementSnapshot.PathProgress = packet.ReadUInt32();
+
+            return entity;
         }
     }
 
@@ -379,7 +385,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             }
         }
 
-        internal void SecondPass(MovementInfo movementInfo, Packet packet, ParsingContext context)
+        public void SecondPass(MovementInfo movementInfo, Packet packet, ParsingContext context)
         {
             if (_notFinalized)
             {
@@ -401,19 +407,21 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
                 for (var i = 0; i < _pathSize; ++i)
                 {
-                    var waypoint = new Vector3();
-                    waypoint.Z = packet.ReadSingle();
-                    waypoint.X = packet.ReadSingle();
-                    waypoint.Y = packet.ReadSingle();
+                    // var waypoint = packet.ReadVector3().ZXY;
+                    var z = packet.ReadSingle();
+                    var x = packet.ReadSingle();
+                    var y = packet.ReadSingle();
+                    var waypoint = new Vector3(x, y, z);
                 }
 
                 if (movementInfo.Spline.Mode == SplineMode.FacingSpot)
-                    movementInfo.Spline.FacingSpot = new Vector3
-                    {
-                        X = packet.ReadSingle(),
-                        Z = packet.ReadSingle(),
-                        Y = packet.ReadSingle()
-                    };
+                {
+                    var x = packet.ReadSingle();
+                    var z = packet.ReadSingle();
+                    var y = packet.ReadSingle();
+
+                    movementInfo.Spline.FacingSpot = new Vector3(x, y, z);
+                }
 
                 movementInfo.Spline.DurationModNext = packet.ReadSingle();
                 movementInfo.Spline.Duration = packet.ReadUInt32();
@@ -424,12 +432,10 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 movementInfo.Spline.DurationMod = packet.ReadSingle();
             }
 
-            movementInfo.Spline.FinalPoint = new Vector3
-            {
-                Z = packet.ReadSingle(),
-                X = packet.ReadSingle(),
-                Y = packet.ReadSingle()
-            };
+            var finalZ = packet.ReadSingle();
+            var finalX = packet.ReadSingle();
+            var finalY = packet.ReadSingle();
+            movementInfo.Spline.FinalPoint = new(finalX, finalY, finalZ);
 
             movementInfo.Spline.ID = packet.ReadUInt32();
         }

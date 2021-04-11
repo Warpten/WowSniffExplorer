@@ -17,6 +17,10 @@
         public IUpdateField ChosenTitle { get; }
         public IUpdateField FakeInebriation { get; }
         public IUpdateField FIELD_PAD_0 { get; }
+    }
+
+    public interface IActivePlayerData : IUpdateFieldStorage
+    {
         public IUpdateField[] InventorySlots { get; }
         public IUpdateField[] VendorBuyBackSlots { get; }
         public IUpdateField Farsight { get; }

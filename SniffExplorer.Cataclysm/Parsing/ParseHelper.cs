@@ -34,13 +34,13 @@ namespace SniffExplorer.Cataclysm.Parsing
             };
         }
 
-        public override IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID)
+        public override IEntity CreateEntity(IObjectGUID objectGUID, EntityTypeID typeID, bool isSelf)
         {
             return typeID switch
             {
                 EntityTypeID.Object        => new Object(objectGUID, Context),
-                EntityTypeID.ActivePlayer  => new Player(objectGUID, Context),
-                EntityTypeID.Player        => new Player(objectGUID, Context),
+                EntityTypeID.ActivePlayer  => new Player(objectGUID, Context, true),
+                EntityTypeID.Player        => new Player(objectGUID, Context, isSelf),
                 EntityTypeID.Corpse        => new Corpse(objectGUID, Context),
                 EntityTypeID.Creature      => new Creature(objectGUID, Context),
                 EntityTypeID.DynamicObject => new DynamicObject(objectGUID, Context),
@@ -50,7 +50,7 @@ namespace SniffExplorer.Cataclysm.Parsing
                 EntityTypeID.AreaTrigger   => new AreaTrigger(objectGUID, Context),
                 _ => objectGUID.Type switch
                 {
-                    ObjectGuidType.Player        => new Player(objectGUID, Context),
+                    ObjectGuidType.Player        => new Player(objectGUID, Context, isSelf),
                     ObjectGuidType.Pet           => new Creature(objectGUID, Context),
                     ObjectGuidType.Vehicle       => new Creature(objectGUID, Context),
                     ObjectGuidType.Creature      => new Creature(objectGUID, Context),
