@@ -107,7 +107,7 @@ namespace SniffExplorer.Parsing.Engine
 
             Observable.Start(() =>
             {
-                var taskPoolScheduler = new TaskPoolScheduler(new TaskFactory(OrderedTaskScheduler.Default));
+                // var taskPoolScheduler = new TaskPoolScheduler(new TaskFactory(OrderedTaskScheduler.Default));
 
                 var executionObservable = Observable.Defer(() =>
                 {

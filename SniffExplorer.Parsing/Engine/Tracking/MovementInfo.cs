@@ -8,7 +8,8 @@ namespace SniffExplorer.Parsing.Engine.Tracking
         FacingAngle  = 0,
         FacingSpot   = 1,
         FacingTarget = 2,
-        Normal       = 3
+        Normal       = 3,
+        Stop         = 4
     }
 
     public enum SplineType

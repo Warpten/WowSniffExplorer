@@ -55,8 +55,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
     public class MovementHandler
     {
-        // [Parser(PacketDirection.ServerToClient, Opcode.SMSG_ON_MONSTER_MOVE)]
-        // [Parser(PacketDirection.ServerToClient, Opcode.SMSG_ON_MONSTER_MOVE_TRANSPORT)]
+        [Parser(PacketDirection.ServerToClient, Opcode.SMSG_ON_MONSTER_MOVE)]
+        [Parser(PacketDirection.ServerToClient, Opcode.SMSG_ON_MONSTER_MOVE_TRANSPORT)]
         public static void HandleMonsterMove(ParsingContext context, Packet packet)
         {
             var moverGUID = packet.ReadPackedGUID();
@@ -80,7 +80,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
             switch (splineMode)
             {
-                case 3:
+                case 3: // Different from the enum... Blizzard, please.
                     splineInfo.Mode = SplineMode.FacingTarget;
                     splineInfo.TargetGUID = packet.ReadGUID();
                     break;
@@ -94,6 +94,14 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                     splineInfo.Mode = SplineMode.FacingSpot;
                     splineInfo.FacingSpot = packet.ReadVector3();
                     break;
+                case 0:
+                    splineInfo.Mode = SplineMode.Normal;
+                    break;
+                case 1:
+                    splineInfo.Mode = SplineMode.Stop;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(splineMode));
             }
 
             var splineFlags = (SplineFlag) packet.ReadUInt32();
@@ -112,6 +120,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             }
 
             var pointCount = packet.ReadUInt32();
+            if (pointCount == 0)
+                return;
 
             if (splineFlags.HasFlag(SplineFlag.UncompressedPath))
             {
