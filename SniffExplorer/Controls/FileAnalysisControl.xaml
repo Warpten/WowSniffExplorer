@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="SniffExplorer.Controls.FileAnalysisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SniffExplorer.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+    <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock x:Name="_parseStatusText" />
+        </StatusBar>
+
+        <Grid DockPanel.Dock="Top" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TabControl Grid.Row="0">
+                <TabItem Header="Players">
+                    <local:PlayerBrowserControl HorizontalAlignment="Stretch" x:Name="_playerDisplayControl" />
+                </TabItem>
+                <TabItem Header="Units">
+                    <local:UnitBrowserControl HorizontalAlignment="Stretch" x:Name="_unitDisplayControl" />
+                </TabItem>
+                <TabItem Header="GameObjects">
+                    <TabPanel>
+
+                    </TabPanel>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</UserControl>

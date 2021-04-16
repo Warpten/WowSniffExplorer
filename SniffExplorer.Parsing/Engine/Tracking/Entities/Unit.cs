@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using SniffExplorer.Parsing.Engine.Tracking.Types;
 using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.Enums;
@@ -15,6 +16,8 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 
         public RaceMask Race { get; private set; }
         public ClassMask Class { get; private set; }
+
+        public IHistory<SplineInfo> Splines { get; } = HistoryFactory.Create<SplineInfo>();
         
         public override EntityTypeID TypeID { get; } = EntityTypeID.Creature;
 

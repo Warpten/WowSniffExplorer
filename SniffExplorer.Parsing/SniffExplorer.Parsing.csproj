@@ -7,6 +7,8 @@
     <LangVersion>9.0</LangVersion>
 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    
+    <OutDir>..\Build\$(Configuration)</OutDir>
   </PropertyGroup>
 
   <ItemGroup>

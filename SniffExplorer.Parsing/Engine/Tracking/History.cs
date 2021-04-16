@@ -39,7 +39,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
         public bool HasValue(DateTime moment)
             => _values.ContainsKey(moment);
 
-        public IEnumerable<T> Values => _values.Values;
+        public IEnumerable<T> Values => _values.OrderBy(kv => kv.Key).Select(kv => kv.Value);
     }
 
     public class BoxedHistory<T> : IHistory<T>

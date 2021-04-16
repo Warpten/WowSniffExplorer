@@ -23,6 +23,9 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Types
 
         public Vector3[] Points { get; set; }
 
-        public uint MoveTime { get; set; }
+        public uint Duration { get; set; }
+        
+        public uint AnimationTier { get; set; }
+        public float Gravity { get; set; }
     }
 }

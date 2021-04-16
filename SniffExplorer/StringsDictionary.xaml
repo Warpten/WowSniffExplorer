@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="Warrior">Warrior</system:String>
+    <system:String x:Key="Paladin">Paladin</system:String>
+    <system:String x:Key="Hunter">Hunter</system:String>
+    <system:String x:Key="Rogue">Rogue</system:String>
+    <system:String x:Key="Priest">Priest</system:String>
+    <system:String x:Key="DeathKnight">Death Knight</system:String>
+    <system:String x:Key="Shaman">Shaman</system:String>
+    <system:String x:Key="Mage">Mage</system:String>
+    <system:String x:Key="Warlock">Warlock</system:String>
+    <system:String x:Key="Monk">Monk</system:String>
+    <system:String x:Key="Druid">Druid</system:String>
+    <system:String x:Key="DemonHunter">Demon Hunter</system:String>
+
+    <system:String x:Key="Human">Human</system:String>
+    <system:String x:Key="Dwarf">Dwarf</system:String>
+    <system:String x:Key="NightElf">Night Elf</system:String>
+    <system:String x:Key="Gnome">Gnome</system:String>
+    <system:String x:Key="Draenei">Draenei</system:String>
+    <system:String x:Key="Worgen">Worgen</system:String>
+    <system:String x:Key="Orc">Orc</system:String>
+    <system:String x:Key="Undead">Undead</system:String>
+    <system:String x:Key="Tauren">Tauren</system:String>
+    <system:String x:Key="Troll">Troll</system:String>
+    <system:String x:Key="BloodElf">Blood Elf</system:String>
+    <system:String x:Key="Goblin">Goblin</system:String>
+
+    <system:String x:Key="VoidElf">Void Elf</system:String>
+    <system:String x:Key="LightforgedDraenei">Lightforged Draenei</system:String>
+    <system:String x:Key="DarkIronDwarf">Dark Iron Dwarf</system:String>
+    <system:String x:Key="KulTiran">Kul Tiran</system:String>
+    <system:String x:Key="Mechagnome">Mechagnome</system:String>
+
+    <system:String x:Key="Nightborne">Nightborne</system:String>
+    <system:String x:Key="HighmountainTauren">Highmountain Tauren</system:String>
+    <system:String x:Key="MagharOrc">Mag'har Orc</system:String>
+    <system:String x:Key="ZandalariTroll">Zandalari Troll</system:String>
+    <!-- /sigh -->
+    <system:String x:Key="Vulpera">Vulpera</system:String>
+
+    <system:String x:Key="Pandaren">Pandaren</system:String>
+
+    <system:String x:Key="ApplicationTitle">WowPacketExplorer</system:String>
+</ResourceDictionary>

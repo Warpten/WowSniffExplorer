@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+
+    <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+
+    <ApplicationIcon>Resources\inv_misc_punchcards_blue.ico</ApplicationIcon>
+
+    <OutDir>..\Build\$(Configuration)</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SniffExplorer.Parsing\SniffExplorer.Parsing.csproj" />
+    <ProjectReference Include="..\SniffExplorer.Shared\SniffExplorer.Shared.csproj" />
+
+    <ProjectReference Include="..\SniffExplorer.Generators\SniffExplorer.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" Pack="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.15.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.8.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Alliance.png" />
+    <Resource Include="Resources\DeathKnight.png" />
+    <Resource Include="Resources\DemonHunter.png" />
+    <Resource Include="Resources\Druid.png" />
+    <Resource Include="Resources\Hunter.png" />
+    <Resource Include="Resources\inv_misc_punchcards_blue.ico" />
+    <Resource Include="Resources\inv_misc_punchcards_blue.png" />
+    <Resource Include="Resources\Mage.png" />
+    <Resource Include="Resources\Merriweather-Regular.ttf" />
+    <Resource Include="Resources\missingno.png" />
+    <Resource Include="Resources\Monk.png" />
+    <Resource Include="Resources\Paladin.png" />
+    <Resource Include="Resources\Priest.png" />
+    <Resource Include="Resources\Rogue.png" />
+    <Resource Include="Resources\Shaman.png" />
+    <Resource Include="Resources\Warlock.png" />
+    <Resource Include="Resources\Warrior.png" />
+  </ItemGroup>
+</Project>

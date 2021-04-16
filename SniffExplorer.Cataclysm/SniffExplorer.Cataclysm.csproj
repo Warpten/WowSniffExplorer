@@ -5,6 +5,9 @@
     <LangVersion>9.0</LangVersion>
 
     <Nullable>enable</Nullable>
+
+
+    <OutDir>..\Build\$(Configuration)\Modules</OutDir>
   </PropertyGroup>
 
   <ItemGroup>

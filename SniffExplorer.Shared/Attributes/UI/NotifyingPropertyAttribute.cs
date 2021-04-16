@@ -6,5 +6,8 @@ namespace SniffExplorer.Shared.Attributes.UI
     public class NotifyingPropertyAttribute : Attribute
     {
         public string? PropertyName { get; set; }
+
+        public string? BeforeCallback { get; set; }
+        public string? AfterCallback { get; set; }
     }
 }

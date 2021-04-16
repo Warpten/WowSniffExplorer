@@ -60,7 +60,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
         public static void HandleMonsterMove(ParsingContext context, Packet packet)
         {
             var moverGUID = packet.ReadPackedGUID();
-            var entity = context.ObjectManager[moverGUID];
+            if (context.ObjectManager[moverGUID] is not IUnit entity)
+                return;
 
             var splineInfo = new SplineInfo();
 
@@ -107,15 +108,15 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             var splineFlags = (SplineFlag) packet.ReadUInt32();
             if (splineFlags.HasFlag(SplineFlag.Animation))
             {
-                var animationTier = packet.ReadUInt8();
+                splineInfo.AnimationTier = packet.ReadUInt8();
                 var tierTransitionAnimTime = packet.ReadUInt32();
             }
 
-            splineInfo.MoveTime = packet.ReadUInt32();
+            splineInfo.Duration = packet.ReadUInt32();
 
             if (splineFlags.HasFlag(SplineFlag.Parabolic))
             {
-                var gravity = packet.ReadSingle();
+                splineInfo.Gravity = packet.ReadSingle();
                 var specialTime = packet.ReadUInt32();
             }
 
@@ -138,6 +139,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 for (var i = 0; i < splineInfo.Points.Length; ++i)
                     splineInfo.Points[i] = middlePosition - packet.ReadPackedVector3();
             }
+
+            entity.Splines.Insert(packet.Moment, splineInfo);
         }
     }
 }

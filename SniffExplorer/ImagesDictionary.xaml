@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="IconWarrior" UriSource="Resources/Warrior.png" />
+    <BitmapImage x:Key="IconPaladin"  UriSource="Resources/Paladin.png" />
+    <BitmapImage x:Key="IconHunter" UriSource="Resources/Hunter.png" />
+    <BitmapImage x:Key="IconRogue" UriSource="Resources/Rogue.png" />
+    <BitmapImage x:Key="IconPriest" UriSource="Resources/Priest.png" />
+    <BitmapImage x:Key="IconDeathKnight" UriSource="Resources/DeathKnight.png" />
+    <BitmapImage x:Key="IconShaman" UriSource="Resources/Shaman.png" />
+    <BitmapImage x:Key="IconMage" UriSource="Resources/Mage.png" />
+    <BitmapImage x:Key="IconWarlock" UriSource="Resources/Warlock.png" />
+    <BitmapImage x:Key="IconMonk" UriSource="Resources/Monk.png" />
+    <BitmapImage x:Key="IconDruid" UriSource="Resources/Druid.png" />
+    <BitmapImage x:Key="IconDemonHunter" UriSource="Resources/DemonHunter.png" />
+
+    <BitmapImage x:Key="AppIcon" UriSource="Resources/inv_misc_punchcards_blue.png" />
+</ResourceDictionary>

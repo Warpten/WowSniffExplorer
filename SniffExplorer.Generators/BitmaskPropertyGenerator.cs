@@ -28,6 +28,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+#nullable enable
+
 namespace {{ ContainingNamespace }}
 {
     public partial class {{ EnhancedTypeName }} : {{ NotifySymbolName }}
@@ -45,13 +47,18 @@ namespace {{ ContainingNamespace }}
                 else
                     {{ property.BackingMember }} &= ~{{ property.Enumeration }}.{{ property.PropertyName }};
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof({{ property.PropertyName }})));
+                NotifyPropertyChanged(nameof({{ property.PropertyName }}));
             }
         }
         {{ end }}
 
         {{ if NotifyEventHandler }}
         public event {{ NotifyEventHandler }} PropertyChanged;
+        {{ end }}
+
+        {{ if NeedsImplementation }}
+        protected virtual void NotifyPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new(propertyName));
         {{ end }}
     }
 }
@@ -80,7 +87,7 @@ namespace {{ ContainingNamespace }}
             foreach (var containingType in fieldGroups.Select(f => f.Key)
                 .Union(propertyGroups.Select(p => p.Key), SymbolEqualityComparer.Default).Cast<INamedTypeSymbol>())
             {
-                var npcImplemented = containingType.Interfaces.Contains(notifySymbol, SymbolEqualityComparer.Default);
+                var npcImplemented = containingType.AllInterfaces.Contains(notifySymbol, SymbolEqualityComparer.Default);
                 var npcEventHandler = context.GetSymbol<PropertyChangedEventHandler>();
 
                 if (!fieldGroups.TryGetValue(containingType, out var fields))
@@ -99,6 +106,7 @@ namespace {{ ContainingNamespace }}
                     NotifySymbolName = notifySymbol!.ToDisplayString(),
                     NotifyEventHandler = npcImplemented ? null : npcEventHandler?.ToDisplayString(),
                     ContainingNamespace = containingType.ContainingNamespace.ToDisplayString(),
+                    NeedsImplementation = containingType.GetAllMembers().All(m => m.Name != "NotifyPropertyChanged"),
                     Properties = members.SelectMany(field =>
                     {
                         if (field == null)

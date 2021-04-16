@@ -80,6 +80,18 @@ namespace SniffExplorer.Generators.Utilities
             return symbol.FindAttribute(attributeData) != null;
         }
 
+        public static IEnumerable<ISymbol> GetAllMembers(this INamedTypeSymbol symbol)
+        {
+            foreach (var member in symbol.GetMembers())
+                yield return member;
+
+            if (symbol.BaseType != null)
+            {
+                foreach (var subMember in symbol.BaseType.GetAllMembers())
+                    yield return subMember;
+            }
+        }
+
         public static AttributeData? FindAttribute(this ISymbol property, INamedTypeSymbol? attributeClassSymbol)
             => property.GetAllAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeClassSymbol));
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -28,6 +29,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+#nullable enable
+
 namespace {{ ContainingNamespace }}
 {
     public partial class {{ EnhancedTypeName }} : {{ if BaseType }}{{ BaseType }}, {{ end }}{{ NotifySymbolName }}
@@ -40,26 +43,22 @@ namespace {{ ContainingNamespace }}
                 if (EqualityComparer<{{ property.Type }}>.Default.Equals({{ property.FieldName }}, value))
                     return;
 
-                Before{{ property.PropertyName }}Change({{ property.FieldName }}, value);
+                {{ if property.BeforeCallback }}{{ property.AfterCallback }}({{ property.FieldName }}, value);{{ end }}
                 {{ property.FieldName }} = value;
-                After{{ property.PropertyName }}Change();
+                {{ if property.AfterCallback }}{{ property.AfterCallback }}();{{ end }}
+
                 NotifyPropertyChanged(nameof({{ property.PropertyName }}));
             }
         }
-
-        partial void Before{{ property.PropertyName }}Change({{ property.Type }} oldValue, {{ property.Type }} newValue);
-        partial void After{{ property.PropertyName }}Change();
         {{ end }}
 
         {{ if NotifyEventHandler }}
-        public event {{ NotifyEventHandler }} PropertyChanged;
+        public event {{ NotifyEventHandler }}? PropertyChanged;
         {{ end }}
 
-        {{ if GenerateNotifier }}
-        protected void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        {{ if NeedsImplementation }}
+        protected virtual void NotifyPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new(propertyName));
         {{ end }}
     }
 }
@@ -74,6 +73,7 @@ namespace {{ ContainingNamespace }}
 
             // get the added attribute, and INotifyPropertyChanged
             var notifySymbol = context.GetSymbol<INotifyPropertyChanged>();
+            var objectSymbol = context.GetSymbol<object>();
 
             // group the fields by class, and generate the source
             foreach (var group in receiver.Fields.GroupBy(f => f.ContainingType, e => e, SymbolEqualityComparer.Default))
@@ -98,16 +98,31 @@ namespace {{ ContainingNamespace }}
                     return fieldName.Substring(0, 1).ToUpper() + fieldName.Substring(1);
                 }
 
+                string? findCallbackName(AttributeData? attributeData, string callbackName)
+                {
+                    if (attributeData == null)
+                        return null;
+
+                    var arg = attributeData.FindArgument(callbackName);
+                    if (!arg.HasValue)
+                        return null;
+
+                    if (arg.Value.IsNull)
+                        return null;
+
+                    return arg.Value.Value!.ToString();
+                }
+
                 var file = _template.Render(new
                 {
                     GeneratorName = nameof(NotifyingPropertyGenerator),
-                    GenerationDate = DateTime.Now.ToString(),
+                    GenerationDate = DateTime.Now.ToString(CultureInfo.InvariantCulture),
                     EnhancedTypeName = group.Key!.ToDisplayString().Split('.').Last(),
-                    BaseType = classSymbol.BaseType,
-                    GenerateNotifier = !classSymbol.BaseType?.AllInterfaces.Contains(notifySymbol!) ?? true,
+                    BaseType = SymbolEqualityComparer.Default.Equals(classSymbol.BaseType, objectSymbol) ? null : classSymbol.BaseType,
                     NotifySymbolName = notifySymbol!.ToDisplayString(),
                     NotifyEventHandler = npcImplemented ? null : npcEventHandler?.ToDisplayString(),
                     ContainingNamespace = classSymbol.ContainingNamespace.ToDisplayString(),
+                    NeedsImplementation = classSymbol.GetAllMembers().All(m => m.Name != "NotifyPropertyChanged"),
                     Properties = group.Select(field =>
                     {
                         var attributeData = field.FindAttribute<NotifyingPropertyAttribute>(context);
@@ -117,7 +132,9 @@ namespace {{ ContainingNamespace }}
                         {
                             Type = field.Type.ToDisplayString(),
                             FieldName = field.Name,
-                            PropertyName = chooseName(field.Name, overridenNameOpt)
+                            PropertyName = chooseName(field.Name, overridenNameOpt),
+                            BeforeCallback = findCallbackName(attributeData, nameof(NotifyingPropertyAttribute.BeforeCallback)),
+                            AfterCallback = findCallbackName(attributeData, nameof(NotifyingPropertyAttribute.AfterCallback))
                         };
                     })
                 }, memberInfo => memberInfo.Name);

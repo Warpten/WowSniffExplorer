@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
@@ -39,6 +40,7 @@ namespace SniffExplorer.Parsing.Engine
             if (entryAssembly != null)
             {
                 var baseDirectory = Path.GetDirectoryName(entryAssembly.Location);
+                baseDirectory = Path.Combine(baseDirectory!, "Modules");
 
                 foreach (var assemblyPath in Directory.EnumerateFiles(baseDirectory!, "*.dll", SearchOption.AllDirectories))
                 {
