@@ -5,7 +5,7 @@ namespace SniffExplorer.Windows.Models
 {
     public partial class MainWindowModel : INotifyPropertyChanged
     {
-        [NotifyingProperty(PropertyName = "Staeg")]
+        [NotifyingProperty(PropertyName = "Stage")]
         private Stage? _stage;
 
         public event PropertyChangedEventHandler? PropertyChanged;

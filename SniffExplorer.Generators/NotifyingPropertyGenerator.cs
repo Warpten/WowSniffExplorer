@@ -43,7 +43,7 @@ namespace {{ ContainingNamespace }}
                 if (EqualityComparer<{{ property.Type }}>.Default.Equals({{ property.FieldName }}, value))
                     return;
 
-                {{ if property.BeforeCallback }}{{ property.AfterCallback }}({{ property.FieldName }}, value);{{ end }}
+                {{ if property.BeforeCallback }}{{ property.BeforeCallback }}({{ property.FieldName }}, value);{{ end }}
                 {{ property.FieldName }} = value;
                 {{ if property.AfterCallback }}{{ property.AfterCallback }}();{{ end }}
 

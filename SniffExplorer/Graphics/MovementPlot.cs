@@ -50,12 +50,12 @@ namespace SniffExplorer.Graphics
 
             _points.Points.Add(point);
             
-            _boundingBox[0] = Math.Min(_boundingBox[0], point.X);
-            _boundingBox[1] = Math.Max(_boundingBox[1], point.X);
-            _boundingBox[2] = Math.Min(_boundingBox[2], point.Y);
-            _boundingBox[3] = Math.Max(_boundingBox[3], point.Y);
-            _boundingBox[4] = Math.Min(_boundingBox[4], point.Z);
-            _boundingBox[5] = Math.Max(_boundingBox[5], point.Z);
+            _boundingBox[0] = Math.Min(_boundingBox[0], point.X - 5.0);
+            _boundingBox[1] = Math.Max(_boundingBox[1], point.X + 5.0);
+            _boundingBox[2] = Math.Min(_boundingBox[2], point.Y - 5.0);
+            _boundingBox[3] = Math.Max(_boundingBox[3], point.Y + 5.0);
+            _boundingBox[4] = Math.Min(_boundingBox[4], point.Z - 5.0);
+            _boundingBox[5] = Math.Max(_boundingBox[5], point.Z + 5.0);
         }
 
         public void Clear()
@@ -81,64 +81,91 @@ namespace SniffExplorer.Graphics
         {
             Children.Clear();
             Children.Add(new DefaultLights());
-            
-            var boundingBoxSize = Math.Max(Math.Max(MaximumX - MinimumX, MaximumY - MinimumY), MaximumZ - MinimumZ);
-            var lineThickness = boundingBoxSize / 1000;
 
-            var boundingBox = new Rect3D()
+            if (_points.Points.Count > 0)
             {
-                X = MinimumX,
-                Y = MinimumY,
-                Z = MinimumZ,
-                SizeX = MaximumX - MinimumX,
-                SizeY = MaximumY - MinimumY,
-                SizeZ = MaximumZ - MinimumZ
-            };
+                var xLength = MaximumX - MinimumX;
+                var yLength = MaximumY - MinimumY;
+                var zLength = MaximumZ - MinimumZ;
+                var boundingBoxSize = Math.Max(Math.Max(Math.Abs(xLength), Math.Abs(yLength)), Math.Abs(zLength));
+                var lineThickness = boundingBoxSize / 1000;
 
-            // Create Axis.
-            void createAxis(string label, Point3D start, Point3D end, Point3D labelPosition)
-            {
-                Children.Add(new ArrowVisual3D {
-                    Diameter = lineThickness * 5.0,
-                    Fill = new SolidColorBrush(Colors.Black),
-                    Point1 = start,
-                    Point2 = end,
-                    ThetaDiv = 16
-                });
-
-                Children.Add(new BillboardTextVisual3D() {
-                    Text = label,
-                    FontWeight = FontWeights.Bold,
-                    FontSize = 18,
-                    Foreground = new SolidColorBrush(Colors.Black),
-                    Position = labelPosition
-                });
-            }
-            
-            createAxis("X", new Point3D(MinimumX, MinimumY, MinimumZ), new Point3D(MinimumX + boundingBoxSize * 1.25f, MinimumY, MinimumZ), new Point3D(MaximumX + boundingBoxSize * 1.25f + 15, MinimumY, MinimumZ));
-            createAxis("Y", new Point3D(MinimumX, MinimumY, MinimumZ), new Point3D(MinimumX, MinimumY + boundingBoxSize * 1.25f, MinimumZ), new Point3D(MinimumX, MaximumY + boundingBoxSize * 1.25f + 15, MinimumZ));
-            createAxis("Z", new Point3D(MinimumX, MinimumY, MinimumZ), new Point3D(MinimumX, MinimumY, MinimumZ + boundingBoxSize * 1.25f), new Point3D(MinimumX, MinimumY, MaximumZ + boundingBoxSize * 1.25f + 15));
-
-            if (true)
-            {
-                Children.Add(new BoundingBoxWireFrameVisual3D()
+                var boundingBox = new Rect3D()
                 {
-                    Thickness = 1.0,
-                    Color = Colors.Black,
-                    BoundingBox = boundingBox
-                });
+                    X = MinimumX,
+                    Y = MinimumY,
+                    Z = MinimumZ,
+                    SizeX = xLength,
+                    SizeY = yLength,
+                    SizeZ = zLength
+                };
+
+                // Create Axis.
+                void createAxis(string label, Point3D start, Point3D end, Point3D labelPosition)
+                {
+                    Children.Add(new ArrowVisual3D
+                    {
+                        Diameter = lineThickness * 5.0,
+                        Fill = new SolidColorBrush(Colors.Black),
+                        Point1 = start,
+                        Point2 = end,
+                        ThetaDiv = 16
+                    });
+
+                    Children.Add(new BillboardTextVisual3D()
+                    {
+                        Text = label,
+                        FontWeight = FontWeights.Bold,
+                        FontSize = 18,
+                        Foreground = new SolidColorBrush(Colors.Black),
+                        Position = labelPosition
+                    });
+                }
+
+                createAxis("X", new Point3D(MinimumX, MinimumY, MinimumZ),
+                    new Point3D(MinimumX + xLength + 15, MinimumY, MinimumZ),
+                    new Point3D(MinimumX + xLength + 15 + 5, MinimumY, MinimumZ));
+                createAxis("Y", new Point3D(MinimumX, MinimumY, MinimumZ),
+                    new Point3D(MinimumX, MinimumY + yLength + 15, MinimumZ),
+                    new Point3D(MinimumX, MinimumY + yLength + 15 + 5, MinimumZ));
+                createAxis("Z", new Point3D(MinimumX, MinimumY, MinimumZ),
+                    new Point3D(MinimumX, MinimumY, MinimumZ + zLength + 15),
+                    new Point3D(MinimumX, MinimumY, MinimumZ + zLength + 15 + 5));
+
+                if (true)
+                {
+                    Children.Add(new BoundingBoxWireFrameVisual3D()
+                    {
+                        Thickness = 1.0,
+                        Color = Colors.Black,
+                        BoundingBox = boundingBox
+                    });
+
+                    Children.Add(new GridLinesVisual3D()
+                    {
+                        Center = new Point3D(boundingBox.X + boundingBox.SizeX / 2.0f,
+                            boundingBox.Y + boundingBox.SizeY / 2.0f,
+                            MinimumZ),
+                        Length = boundingBox.SizeX,
+                        Width = boundingBox.SizeY,
+                        Thickness = 0.15,
+                        Fill = new SolidColorBrush(Colors.Gray),
+                        MinorDistance = 5.0,
+                        MajorDistance =  boundingBoxSize
+                    });
+                }
+
+                Children.Add(_points);
+                Children.Add(_path);
+
+                Camera.LookAt(new Point3D(MinimumX, MinimumY, MinimumZ), 0.0d);
+
+                // Expand the bounding box for zooming a bit farther back
+                boundingBox.SizeX *= 1.15f;
+                boundingBox.SizeY *= 1.15f;
+                boundingBox.SizeZ *= 1.15f;
+                ZoomExtents(boundingBox, 0.0D);
             }
-
-            Children.Add(_points);
-            Children.Add(_path);
-
-            Camera.LookAt(new Point3D(MinimumX, MinimumY, MinimumZ), 0.0d);
-            
-            // Expand the bounding box for zooming a bit farther back
-            boundingBox.SizeX *= 1.15f;
-            boundingBox.SizeY *= 1.15f;
-            boundingBox.SizeZ *= 1.15f;
-            ZoomExtents(boundingBox, 0.0D);
         }
     }
 }
