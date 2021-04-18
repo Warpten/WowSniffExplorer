@@ -20,6 +20,6 @@ namespace SniffExplorer.Windows.Models
 
         public IObjectGUID Guid => Unit.Guid;
 
-        public IEnumerable<SplineInfo> Splines => Unit.Splines.Values.Where(splineInfo => splineInfo.Points.Length > 0);
+        public IEnumerable<Tuple<DateTime, SplineInfo>> Splines => Unit.Splines.DataPoints.Select(d => d.ToTuple());
     }
 }

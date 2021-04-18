@@ -6,17 +6,6 @@ using System.Runtime.CompilerServices;
 
 namespace SniffExplorer.Parsing.Engine.Tracking
 {
-    public interface IHistory<T>
-    {
-        public IEnumerable<T> Values { get; }
-
-        public T this[DateTime moment] { get; }
-
-        public void Insert(DateTime moment, T value);
-
-        public bool HasValue(DateTime moment);
-    }
-
     /// <summary>
     /// A simple object in charge of maitaining multiple instances of the same type, as seen in different points in time.
     /// </summary>
@@ -40,6 +29,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             => _values.ContainsKey(moment);
 
         public IEnumerable<T> Values => _values.OrderBy(kv => kv.Key).Select(kv => kv.Value);
+        public IEnumerable<(DateTime, T)> DataPoints => _values.Select(kv => (kv.Key, kv.Value));
     }
 
     public class BoxedHistory<T> : IHistory<T>
@@ -57,6 +47,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             => _values.ContainsKey(moment);
 
         public IEnumerable<T> Values => _values.Values.Select(v => v.Value!);
+        public IEnumerable<(DateTime, T)> DataPoints => _values.Select(kv => (kv.Key, kv.Value.Value!));
     }
 
     public static class HistoryFactory

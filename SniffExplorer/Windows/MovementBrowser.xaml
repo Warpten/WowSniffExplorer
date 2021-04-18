@@ -9,6 +9,7 @@
         xmlns:h="http://helix-toolkit.org/wpf"
         xmlns:models="clr-namespace:SniffExplorer.Windows.Models"
         xmlns:graphics="clr-namespace:SniffExplorer.Graphics"
+        xmlns:extensions="clr-namespace:SniffExplorer.Extensions"
         mc:Ignorable="d"
         Title="MovementBrowser" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=models:MovementBrowserModel, IsDesignTimeCreatable=False}">
 
@@ -52,10 +53,12 @@
 
         <TabControl Grid.Row="1" Grid.Column="1" Margin="10">
             <TabItem Header="Splines">
-                <ListView ItemsSource="{Binding Splines}" SelectionChanged="HandleSplineSelection" x:Name="_splineBrowser">
+                <ListView ItemsSource="{Binding Splines}" SelectionChanged="HandleSplineSelection" extensions:ListView.Stretch="True">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Points" DisplayMemberBinding="{Binding Points.Count}" Width="50" />
+                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Item1, StringFormat=hh:MM:ss.fff}" Width="88" />
+                            <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Item2.Duration}" Width="75" />
+                            <GridViewColumn Header="Size" DisplayMemberBinding="{Binding Item2.Points.Length}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
