@@ -8,6 +8,8 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
         public IObjectGUID Guid { get; }
         public IHistory<MovementInfo> MovementInfo { get; }
 
+        
+
         /// <summary>
         /// Object type as seen in JamCliObjCreate.
         /// </summary>

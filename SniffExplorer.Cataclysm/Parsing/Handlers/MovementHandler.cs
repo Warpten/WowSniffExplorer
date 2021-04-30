@@ -73,7 +73,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
             splineInfo.IsVoluntaryExit = packet.ReadUInt8() != 0;
 
-            // First point
+            // First point ?
             var position = packet.ReadVector3();
 
             splineInfo.ID = packet.ReadUInt32();
@@ -139,6 +139,10 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                 for (var i = 0; i < splineInfo.Points.Length; ++i)
                     splineInfo.Points[i] = middlePosition - packet.ReadPackedVector3();
             }
+
+            // TODO: Is this technically still a spline to the target point?
+            if (splineInfo.Points.Length == 0)
+                return;
 
             entity.Splines.Insert(packet.Moment, splineInfo);
         }

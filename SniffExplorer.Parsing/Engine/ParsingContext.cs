@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Disposables;
 using SniffExplorer.Parsing.Engine.Tracking;
 using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Types;
@@ -10,7 +11,7 @@ namespace SniffExplorer.Parsing.Engine
     public readonly struct ParsingOptions
     {
         /// <summary>
-        /// When this option is set to <see cref="bool">trueT</see>, descriptors (also know as update fields)
+        /// When this option is set to <see cref="bool">true</see>, descriptors (also know as update fields)
         /// will not keep an history of their value. Only the last value seen in sniffs will be kept.
         ///
         /// You should use this in situations where you need to parse a sniff only for movements, or spells.
@@ -34,16 +35,29 @@ namespace SniffExplorer.Parsing.Engine
         public IParseHelper Helper { get; }
 
         public NameCache NameCache { get; }
+
+        public SpellHistory SpellHistory { get; }
+
+        private readonly CompositeDisposable _compositeDisposable;
         
         internal ParsingContext(ClientBuild clientBuild, Type parseHelperType)
         {
+            _compositeDisposable = new CompositeDisposable();
+
             ClientBuild = clientBuild;
             Helper = (IParseHelper) Activator.CreateInstance(parseHelperType, this)!;
 
-            ObjectManager = new ObjectManager(Helper);
+            ObjectManager = new(Helper);
 
-            NameCache = new NameCache();
+            NameCache = new();
+            SpellHistory = new();
         }
+
+        public void DisposeResources()
+            => _compositeDisposable.Dispose();
+
+        public void RegisterResource(IDisposable disposable)
+            => _compositeDisposable.Add(disposable);
 
         internal Packet CreatePacket(byte[] dataStream, DateTime moment, Opcode opcode, uint connectionIndex, PacketDirection direction)
             => new(dataStream, moment, opcode, direction, this);

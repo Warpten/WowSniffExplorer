@@ -1,6 +1,5 @@
 ﻿using SniffExplorer.Cataclysm.Attributes;
 using SniffExplorer.Parsing.Engine;
-using SniffExplorer.Parsing.Engine.Events;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Parsing.Versions;
@@ -177,14 +176,14 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             if (targetGUID != null)
                 context.NameCache.Register(targetGUID, targetName);
 
-            var @event = new MessageChatEvent
+            /*var @event = new MessageChatEvent
             {
                 MessageType = chatMessageType.ToString(),
                 Sender = senderGUID,
                 Source = sourceGUID!,
                 Target = targetGUID!,
                 Text = text
-            };
+            };*/
 
             // context.RegisterEvent(packet.Moment, @event);
         }
@@ -200,11 +199,11 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             if (packet.Opcode == Opcode.SMSG_PLAY_OBJECT_SOUND)
                 target = packet.ReadPackedGUID();
 
-            var @event = new PlaySoundEvent {
+           /* var @event = new PlaySoundEvent {
                 SoundKitID = soundKitID,
                 Source = source,
                 Target = target
-            };
+            };*/
 
             // context.RegisterEvent(packet.Moment, @event);
         }

@@ -110,7 +110,8 @@ namespace SniffExplorer.Parsing.Helpers.Handlers
         {
             _packetHandlers.InvokeMethod(Context, packet);
 
-            return packet.FinalizeRead();
+            return true;
+            // return packet.FinalizeRead();
         }
 
         /// <summary>
@@ -122,7 +123,8 @@ namespace SniffExplorer.Parsing.Helpers.Handlers
         {
             await _packetHandlers.InvokeMethodAsync(Context, packet);
 
-            return packet.FinalizeRead();
+            return true;
+            // return packet.FinalizeRead();
         }
     }
 }

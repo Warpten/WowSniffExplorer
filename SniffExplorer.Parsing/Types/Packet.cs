@@ -82,7 +82,7 @@ namespace SniffExplorer.Parsing.Types
             guid.FromPacket(this, false);
             return guid;
         }
-
+        
         public IObjectGUID ReadPackedGUID()
         {
             var guid = _context.Helper.GuidResolver.CreateGUID();

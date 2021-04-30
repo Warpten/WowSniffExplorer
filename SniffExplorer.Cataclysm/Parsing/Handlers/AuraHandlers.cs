@@ -2,6 +2,7 @@
 using SniffExplorer.Parsing.Engine;
 using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Extensions;
+using SniffExplorer.Parsing.Reactive;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
 using SniffExplorer.Shared.Enums;
@@ -31,11 +32,11 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
         public static void HandleAuraUpdate(ParsingContext context, Packet packet)
         {
             var guid = packet.ReadPackedGUID();
-
+            
             // TODO: non-leaky? There's an IDisposable hanging here...
             var entity = context.ObjectManager[guid];
-            if (!(entity is IUnit unit))
-                throw new InvalidOperationException($"Received aura aupdates for a {entity.TypeID}.");
+            if (entity is not IUnit unit)
+                throw new InvalidOperationException($"Received aura aupdates for a {guid.Type}.");
 
             while (packet.CanRead())
                 ReadAuraUpdateBlock(context, packet, unit);
