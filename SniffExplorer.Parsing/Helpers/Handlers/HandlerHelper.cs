@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using SniffExplorer.Parsing.Attributes;
@@ -116,7 +117,9 @@ namespace SniffExplorer.Parsing.Helpers.Handlers
             {
                 foreach (var methodInfo in type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance))
                 {
-                    var attributes = methodInfo.GetCustomAttributes<ParserAttribute>();
+                    var attributes = methodInfo.GetCustomAttributes<ParserAttribute>().ToList();
+                    if (attributes.Count == 0)
+                        continue;
 
                     var @delegate = CreateDelegate(methodInfo, context);
                     foreach (var attribute in attributes)
