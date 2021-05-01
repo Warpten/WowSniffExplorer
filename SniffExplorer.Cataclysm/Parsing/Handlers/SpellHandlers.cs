@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using SniffExplorer.Parsing.Engine;
+using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Parsing.Versions;
@@ -51,21 +53,166 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             NO_HISTORY = 0x1
         }
 
+        private class SpellCastData
+        {
+            public readonly IObjectGUID Caster;
+            public readonly IObjectGUID UnitCaster;
+            public readonly uint CastID;
+            public readonly uint SpellID;
+            public readonly uint CastTime;
+            public readonly CastFlags CastFlags;
+            public readonly CastFlagsEx CastFlagsEx;
+            public readonly TargetFlags TargetFlags;
+
+            public readonly IObjectGUID? ExplicitTarget;
+            
+            public readonly IObjectGUID[]? HitTargets;
+            public readonly MissInfo[]? MissedTargets;
+
+            public IObjectGUID CastGUID => new CastGUID(CastID);
+
+            public readonly struct Location
+            {
+                public readonly IObjectGUID Transport;
+                public readonly Vector3 Position;
+
+                public Location(Packet packet)
+                {
+                    Transport = packet.ReadGUID();
+                    Position = packet.ReadVector3();
+                }
+            }
+
+            public readonly Location? Destination;
+            public readonly Location? Source;
+
+            public readonly uint? Power;
+
+            public readonly struct RuneState
+            {
+                public readonly uint Before;
+                public readonly uint After;
+                public readonly byte[] States;
+
+                public RuneState(Packet packet)
+                {
+                    Before = packet.ReadUInt8();
+                    After = packet.ReadUInt8();
+
+                    States = new byte[6];
+                    for (var i = 0; i < States.Length; ++i)
+                        States[i] = packet.ReadUInt8();
+                }
+            }
+
+            public readonly struct MissileState
+            {
+                public readonly float Elevation;
+                public readonly uint Delay;
+
+                public MissileState(Packet packet)
+                {
+                    Elevation = packet.ReadSingle();
+                    Delay = packet.ReadUInt32();
+                }
+            }
+
+            public readonly RuneState? Runes;
+            public readonly MissileState? MissileInfo;
+
+            public SpellCastData(Packet packet)
+            {
+                Caster = packet.ReadPackedGUID();
+                UnitCaster = packet.ReadPackedGUID();
+                CastID = packet.ReadUInt8();
+                SpellID = packet.ReadUInt32();
+                CastFlags = (CastFlags) packet.ReadUInt32();
+                CastFlagsEx = (CastFlagsEx) packet.ReadUInt32();
+                CastTime = packet.ReadUInt32();
+
+                if (packet.Opcode == Opcode.SMSG_SPELL_GO)
+                {
+                    HitTargets = new IObjectGUID[packet.ReadUInt8()];
+                    for (var i = 0; i < HitTargets.Length; ++i)
+                        HitTargets[i] = packet.ReadGUID();
+
+                    MissedTargets = new MissInfo[packet.ReadUInt8()];
+                    for (var i = 0; i < MissedTargets.Length; ++i)
+                    {
+                        var missTarget = packet.ReadGUID();
+                        var missType = packet.ReadUInt8();
+
+                        if (missType == 11) // Reflect
+                            MissedTargets[i] = new MissInfo(missTarget, missType, packet.ReadUInt8());
+                        else
+                            MissedTargets[i] = new MissInfo(missTarget, missType);
+                    }
+                }
+
+                TargetFlags = (TargetFlags) packet.ReadUInt32();
+                if (TargetFlags.HasFlag(TargetFlags.Unit | TargetFlags.CorpseAlly | TargetFlags.CorpseEnemy | TargetFlags.GameObject | TargetFlags.Minipet))
+                    ExplicitTarget = packet.ReadGUID();
+                else if (TargetFlags.HasFlag(TargetFlags.Item | TargetFlags.TradeItem))
+                    ExplicitTarget = packet.ReadGUID();
+                
+                if (TargetFlags.HasFlag(TargetFlags.SourceLocation))
+                    Source = new Location(packet);
+                
+                if (TargetFlags.HasFlag(TargetFlags.DestinationLocation))
+                    Destination = new Location(packet);
+                
+                if (TargetFlags.HasFlag(TargetFlags.String))
+                {
+                    var @string = packet.ReadCString(128);
+                }
+
+                if (TargetFlags.HasFlag(TargetFlags.ExtraTargets))
+                {
+                    var extraTargetCount = packet.ReadInt32();
+                    for (var i = 0; i < extraTargetCount; ++i)
+                    {
+                        var i1 = packet.ReadUInt32();
+                        var i2 = packet.ReadUInt32();
+                        var i3 = packet.ReadUInt32();
+                        var guid = packet.ReadGUID();
+                    }
+                }
+
+                if (CastFlags.HasFlag(CastFlags.Power))
+                    Power = packet.ReadUInt32();
+
+                if (CastFlags.HasFlag(CastFlags.Runes))
+                    Runes = new RuneState(packet);
+
+                if (CastFlags.HasFlag(CastFlags.Missile))
+                    MissileInfo = new MissileState(packet);
+
+                if (CastFlags.HasFlag(CastFlags.Ammo))
+                {
+                    var displayID = packet.ReadUInt32();
+                    var inventoryType = packet.ReadUInt32();
+                }
+
+                if (CastFlags.HasFlag(CastFlags.VisualChain))
+                {
+                    var i0 = packet.ReadUInt32();
+                    var i1 = packet.ReadUInt32();
+                }
+
+                if (CastFlags.HasFlag(CastFlags.DestLocation))
+                {
+                    var destLocationCastIndex = packet.ReadUInt8();
+                }
+            }
+        }
+
         [Attributes.Parser(PacketDirection.ServerToClient, Opcode.SMSG_SPELL_START)]
         public static void HandleSpellStart(ParsingContext context, Packet packet)
         {
-            var casterGUID = packet.ReadPackedGUID();
-            var unitCasterGUID = packet.ReadPackedGUID();
-            var castGUID = new CastGUID(packet.ReadUInt8());
-            var spellID = packet.ReadUInt32();
-            var castFlags = packet.ReadUInt32();
-            var castFlagsEx = packet.ReadUInt32();
-            var castTime = packet.ReadUInt32();
-
-            if (spellID != 836) return; //! DEBUG
+            var castData = new SpellCastData(packet);
             
             // TODO: There's a lot more to read here, but this is early prototyping.
-            var subscription = context.SpellHistory.Register(castGUID, casterGUID, unitCasterGUID, spellID).Subscribe(historyEntry =>
+            var subscription = context.SpellHistory.Register(castData.CastGUID, castData.Caster, castData.UnitCaster, castData.SpellID).Subscribe(historyEntry =>
             {
                 historyEntry.SpellStart = packet.Moment;
             });
@@ -76,120 +223,19 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
         [Attributes.Parser(PacketDirection.ServerToClient, Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(ParsingContext context, Packet packet)
         {
-            var casterGUID = packet.ReadPackedGUID();
-            var unitCasterGUID = packet.ReadPackedGUID();
-            var castGUID = new CastGUID(packet.ReadUInt8());
-            var spellID = packet.ReadUInt32();
-            var castFlags = (CastFlags) packet.ReadUInt32();
-            var castFlagsEx = (CastFlagsEx) packet.ReadUInt32();
-            var castTime = packet.ReadUInt32();
-
-            if (spellID != 836) return; //! DEBUG
-            
-            var hitTargets = new IObjectGUID[packet.ReadUInt8()];
-            for (var i = 0; i < hitTargets.Length; ++i)
-                hitTargets[i] = packet.ReadGUID();
-            
-            var missTargets = new MissInfo[packet.ReadUInt8()];
-            for (var i = 0; i < missTargets.Length; ++i)
-            {
-                var missTarget = packet.ReadGUID();
-                var missType = packet.ReadUInt8();
-
-                if (missType == 11) // Reflect
-                    missTargets[i] = new MissInfo(missTarget, missType, packet.ReadUInt8());
-                else
-                    missTargets[i] = new MissInfo(missTarget, missType);
-            }
-
-            var targetMask = (TargetFlags) packet.ReadUInt32();
-
-            IObjectGUID? explicitTarget = default;
-            if (targetMask.HasFlag(TargetFlags.Unit | TargetFlags.CorpseAlly | TargetFlags.CorpseEnemy | TargetFlags.GameObject | TargetFlags.Minipet))
-                explicitTarget = packet.ReadGUID();
-            else if (targetMask.HasFlag(TargetFlags.Item | TargetFlags.TradeItem))
-                explicitTarget = packet.ReadGUID();
-
-            #region documentation
-            if (targetMask.HasFlag(TargetFlags.SourceLocation))
-            {
-                var transportGUID = packet.ReadGUID();
-                var sourceLocation = packet.ReadVector3();
-            }
-
-            if (targetMask.HasFlag(TargetFlags.DestinationLocation))
-            {
-                var transportGUID = packet.ReadGUID();
-                var destinationLocation = packet.ReadVector3();
-            }
-
-            if (targetMask.HasFlag(TargetFlags.String))
-            {
-                var @string = packet.ReadCString(128);
-            }
-
-            if (targetMask.HasFlag(TargetFlags.ExtraTargets))
-            {
-                var extraTargetCount = packet.ReadInt32();
-                for (var i = 0; i < extraTargetCount; ++i)
-                {
-                    var i1 = packet.ReadUInt32();
-                    var i2 = packet.ReadUInt32();
-                    var i3 = packet.ReadUInt32();
-                    var guid = packet.ReadGUID();
-                }
-            }
-
-            if (castFlags.HasFlag(CastFlags.Power))
-            {
-                var power = packet.ReadUInt32();
-            }
-
-            if (castFlags.HasFlag(CastFlags.Runes))
-            {
-                var runeStateBefore = packet.ReadUInt8();
-                var runeStateAfter = packet.ReadUInt8();
-
-                var runeStates = new byte[6];
-                for (var i = 0; i < runeStates.Length; ++i)
-                    runeStates[i] = packet.ReadUInt8();
-            }
-
-            if (castFlags.HasFlag(CastFlags.Missile))
-            {
-                var elevation = packet.ReadSingle();
-                var delay = packet.ReadUInt32();
-            }
-
-            if (castFlags.HasFlag(CastFlags.Ammo))
-            {
-                var displayID = packet.ReadUInt32();
-                var inventoryType = packet.ReadUInt32();
-            }
-
-            if (castFlags.HasFlag(CastFlags.VisualChain))
-            {
-                var i0 = packet.ReadUInt32();
-                var i1 = packet.ReadUInt32();
-            }
-
-            if (castFlags.HasFlag(CastFlags.DestLocation))
-            {
-                var destLocationCastIndex = packet.ReadUInt8();
-            }
-            #endregion
+            var spellCastData = new SpellCastData(packet);
     
             // Delayed subscription because we need to wait for SMSG_SPELL_START to be processed.
-            var subscription = context.SpellHistory[castGUID].Subscribe(historyEntry =>
+            var subscription = context.SpellHistory[spellCastData.CastGUID].Subscribe(historyEntry =>
             {
-                Debug.Assert(historyEntry.SpellID == spellID, "Spell ID mismatch!");
-                Debug.Assert(historyEntry.Caster == casterGUID, "Caster GUID mismatch");
-                Debug.Assert(historyEntry.UnitCaster == unitCasterGUID, "Unit caster GUID mismatch!");
+                Debug.Assert(historyEntry.SpellID == spellCastData.SpellID, "Spell ID mismatch!");
+                Debug.Assert(historyEntry.Caster == spellCastData.Caster, "Caster GUID mismatch");
+                Debug.Assert(historyEntry.UnitCaster == spellCastData.UnitCaster, "Unit caster GUID mismatch!");
 
-                historyEntry.HitTargets = hitTargets;
-                historyEntry.MissedTargets = missTargets;
+                historyEntry.HitTargets = spellCastData.HitTargets;
+                historyEntry.MissedTargets = spellCastData.MissedTargets;
 
-                historyEntry.ExplicitTarget = explicitTarget;
+                historyEntry.ExplicitTarget = spellCastData.ExplicitTarget;
 
                 historyEntry.SpellGo = packet.Moment;
             });
