@@ -17,6 +17,7 @@ using SniffExplorer.Parsing.Helpers;
 using SniffExplorer.Parsing.Loading;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
+using SniffExplorer.Shared.Extensions;
 
 namespace SniffExplorer.Parsing.Engine
 {
@@ -96,6 +97,7 @@ namespace SniffExplorer.Parsing.Engine
             if (_packetParsed.IsDisposed)
                 _packetParsed.Dispose();
 
+            _parsingContext.DisposeResources();
             _file.Dispose();
         }
 
@@ -109,43 +111,23 @@ namespace SniffExplorer.Parsing.Engine
 
             Observable.Start(() =>
             {
-                // var taskPoolScheduler = new TaskPoolScheduler(new TaskFactory(OrderedTaskScheduler.Default));
+                var executionSequence = new ExecutionSequence();
+                // Step 1. Process SMSG_UPDATE_OBJECT sequentially.
+                executionSequence.AddStep(p => p.Opcode == Opcode.SMSG_UPDATE_OBJECT, false);
 
-                var executionObservable = Observable.Defer(() =>
-                {
-                    var fileObservable = _file.Enumerate(_parsingContext)
-                        .Select((packet, index) =>
-                        {
-                            // Launch an atomic parse operation.
-                            var atomicOperation = Observable.Start(() =>
-                            {
-                                _parsingContext.Helper.Handlers.Process(packet);
-                                return (packet.Opcode, Index: index);
+                executionSequence.PacketParsed.Subscribe(info => {
+                    _packetParsed.OnNext(info);
+                });
 
-                            }, TaskPoolScheduler.Default); // taskPoolScheduler);
+                // Step 2. Process everything else.
+                var parseObservable = executionSequence.Execute(_file.Enumerate(_parsingContext), _parsingContext).TimeInterval();
 
-                            // And subscribe to it for UI feedback.
-                            atomicOperation.Subscribe(results =>
-                            {
-                                _packetParsed.OnNext((results.Opcode, results.Index));
-                            });
-
-                            return atomicOperation;
-                        })
-                        .ToArray();
-
-                    // Collect all the observables and join them.
-                    return new ForkJoinObservable<(Opcode Opcode, int Index)>(fileObservable);
-                    // return fileObservable.ForkJoin();
-                }).TimeInterval();
-
-                // Subscribe on the overall execution to get parse statistics.
-                executionObservable.Subscribe(results =>
+                parseObservable.Subscribe(result =>
                 {
                     var statistics = new ParsingStatistics
                     {
-                        ExecutionTime = results.Interval,
-                        ParsedPacketCount = (uint) results.Value.Length,
+                        ExecutionTime = result.Interval,
+                        ParsedPacketCount = (uint) result.Value,
                         PacketCount = (uint) _file.Count
                     };
 
@@ -166,6 +148,107 @@ namespace SniffExplorer.Parsing.Engine
         }
     }
 
+    class ExecutionSequence
+    {
+        private readonly Subject<(Opcode, int)> _packetParsed;
+        public IObservable<(Opcode Opcode, int Index)> PacketParsed => _packetParsed.AsObservable();
+
+        private readonly LinkedList<Element> _elements = new();
+
+        public ExecutionSequence()
+        {
+            _packetParsed = new ();
+        }
+
+        public ExecutionSequence AddStep(Func<Packet, bool> filter, bool processInParallel)
+        {
+            _elements.AddLast(new Element(filter, processInParallel, this));
+            return this;
+        }
+
+        class Element
+        {
+            private readonly Func<Packet, bool> _filter;
+            private readonly bool _parallel;
+            private readonly ExecutionSequence _sequence;
+
+            public Element(Func<Packet, bool> filter, bool parallel, ExecutionSequence sequence)
+            {
+                _filter = filter;
+                _parallel = parallel;
+
+                _sequence = sequence;
+            }
+
+            public ILookup<bool, Packet> Filter(IEnumerable<Packet> grouping)
+            {
+                return grouping.ToLookup(g => _filter(g));
+            }
+
+            public IObservable<long> Execute(IEnumerable<Packet> handlablePackets, ParsingContext context)
+            {
+                if (_parallel)
+                {
+                    var atomicOperations = handlablePackets.Select((p, index) =>
+                    {
+                        var atomicOperation = Observable.Start(() => {
+                            context.Helper.Handlers.Process(p);
+
+                            _sequence._packetParsed.OnNext((p.Opcode, index));
+                        }, TaskPoolScheduler.Default);
+                        
+                        return atomicOperation;
+                    }).ToArray();
+
+                    return new ForkJoinObservable<Unit>(atomicOperations).Select(_ => (long) _.Length);
+                }
+                else
+                {
+                    return Observable.Start(() =>
+                    {
+                        var count = 0L;
+
+                        foreach (var packet in handlablePackets)
+                        {
+                            ++count;
+
+                            context.Helper.Handlers.Process(packet);
+                            _sequence._packetParsed.OnNext((packet.Opcode, (int) count));
+                        }
+
+                        return count;
+                    });
+                }
+            }
+        }
+
+        public IObservable<long> Execute(IEnumerable<Packet> sequence, ParsingContext context)
+        {
+            // Add a last step that processes everything in parallel
+            AddStep(_ => true, true);
+
+            static void executeNode(LinkedListNode<Element> node, IEnumerable<Packet> remainder, ParsingContext ctx, long previousCount, Subject<long> accumulator)
+            {
+                var partition = node.Value.Filter(remainder);
+                
+                node.Value.Execute(partition[true], ctx).Subscribe(results =>
+                {
+                    if (node.Next == null)
+                    {
+                        accumulator.OnNext(results + previousCount);
+                        accumulator.OnCompleted();
+                    }
+                    else
+                        executeNode(node.Next, partition[false], ctx, results + previousCount, accumulator);
+                }, accumulator.OnError);
+            }
+
+            var executionSubject = new Subject<long>();
+            executeNode(_elements.First!, sequence, context, 0, executionSubject);
+            return executionSubject;
+        }
+    }
+    
     /// <summary>
     /// Reimplementation of ForkJoin without locks.
     /// </summary>

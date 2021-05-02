@@ -113,7 +113,7 @@ namespace SniffExplorer.Generators.UpdateFields
                 using (sourceGenerator.BlockInvariant($"namespace {enumerationSymbol.ContainingNamespace.ToDisplayString()}.{(RealmExpansionType) targetExpansion.Value!}"))
                 {
                     sourceGenerator.AppendLine($"[{generatedDescriptorData!.ToDisplayString()}(ClientBuild = {targetClientBuild}, RealmType = {targetExpansion.Type}.{(RealmExpansionType) targetExpansion.Value})]");
-                    using (sourceGenerator.BlockInvariant($"public class {typeName} : {interfaceSymbol!.ToDisplayString()}"))
+                    using (sourceGenerator.BlockInvariant($"public partial class {typeName} : {interfaceSymbol!.ToDisplayString()}"))
                     {
                         sourceGenerator.AppendLine(@"public int BitCount { get; }");
                         sourceGenerator.AppendLine();
