@@ -9,5 +9,8 @@ namespace SniffExplorer.Controls.Models
 
         [NotifyingProperty(PropertyName = "DiscardUpdateFields")]
         private bool _discardUpdateFields = false;
+
+        [NotifyingProperty(PropertyName = "DiscardUnknownEntities")]
+        private bool _discardUnknownEntities = true;
     }
 }

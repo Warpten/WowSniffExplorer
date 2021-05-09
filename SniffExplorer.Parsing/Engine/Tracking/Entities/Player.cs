@@ -27,7 +27,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
                 ActivePlayerData = activePlayerData ?? throw new InvalidOperationException();
             }
 
-            UnitData.Level.ValueChanges.Take(1).Subscribe(tuple => {
+            UnitData.Level.Take(1).Subscribe(tuple => {
                 Level = tuple.Value;
             });
         }

@@ -30,7 +30,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             get
             {
                 if (EqualityComparer<IHistory<Entry>>.Default.Equals(_auras[slot], default))
-                    _auras[slot] = HistoryFactory.Create<Entry>();
+                    _auras[slot] = HistoryFactory.CreateConcurrent<Entry>();
                 
                 return _auras[slot];
             }

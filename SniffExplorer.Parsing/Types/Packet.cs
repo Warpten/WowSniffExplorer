@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -60,7 +61,12 @@ namespace SniffExplorer.Parsing.Types
         private T Read<T>() where T : unmanaged
         {
             Span<byte> data = stackalloc byte[Unsafe.SizeOf<T>()];
+            #if DEBUG
+            var readCount = _dataStream.Read(data);
+            Debug.Assert(readCount == Unsafe.SizeOf<T>());
+            #else
             _dataStream.Read(data);
+            #endif
             return MemoryMarshal.Read<T>(data);
         }
 

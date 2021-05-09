@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using SniffExplorer.Parsing.Types;
@@ -14,11 +17,6 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
     {
         public int BitEnd { get; }
 
-        /// <summary>
-        /// An observable that emits a value whenever a new value for this descriptor is received.
-        /// </summary>
-        public IObservable<(DateTime Moment, T Value)> ValueChanges { get; }
-        
         private readonly int _bitOffset;
         private readonly int _bitCount;
 
@@ -38,6 +36,11 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
             }
         }
 
+        public IDisposable Subscribe(IObserver<(DateTime, T)> observer)
+        {
+            return _valueSubject.Subscribe(observer);
+        }
+
         protected BaseUpdateField(int bitOffset, int bitCount, ParsingContext context, Func<IHistory<T>> historyFactory)
         {
             _bitOffset = bitOffset;
@@ -46,12 +49,11 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
             _valueSubject = new(1);
 
             BitEnd = bitOffset + bitCount;
-            ValueChanges = _valueSubject;
             
             if (!context.Options.DiscardUpdateFields)
             {
                 _values = historyFactory();
-
+            
                 // Listen for new values and store them.
                 _valueSubject.Subscribe(tuple => _values!.Insert(tuple.Moment, tuple.Value));
             }
@@ -64,8 +66,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
                 return;
 
             var value = ReadValueCore(packet, slicedMask);
-            if (_valueSubject.HasObservers)
-                _valueSubject.OnNext(value: (packet.Moment, value!));
+            _valueSubject.OnNext(value: (packet.Moment, value));
         }
         
         protected abstract T ReadValueCore(Packet packet, UpdateMask updateMask);

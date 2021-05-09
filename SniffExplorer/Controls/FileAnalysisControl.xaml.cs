@@ -30,7 +30,7 @@ namespace SniffExplorer.Controls
             try
             {
                 var sniffFile = new SniffFile(filePath);
-                _parseStatusText.Text = $"Detected client build {sniffFile!.ClientBuild}.";
+                _parseStatusText.Text = $"Detected client build {sniffFile!.ClientBuild}. Collecting packets...";
 
                 Observable.Start(() =>
                 {

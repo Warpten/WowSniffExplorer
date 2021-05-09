@@ -15,10 +15,8 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
         public void ReadValue(Packet packet, UpdateMask updateMask);
     }
 
-    public interface IUpdateField<T> : IUpdateField
+    public interface IUpdateField<T> : IUpdateField, IObservable<(DateTime Moment, T Value)>
     {
         public IEnumerable<T> Values { get; }
-
-        public IObservable<(DateTime Moment, T Value)> ValueChanges { get; }
     }
 }

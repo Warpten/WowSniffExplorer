@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SniffExplorer.Parsing.Engine.Tracking
@@ -51,10 +54,27 @@ namespace SniffExplorer.Parsing.Engine.Tracking
             return false;
         }
 
+        public int Count
+        {
+            get
+            {
+                var count = 0;
+                foreach (var element in MemoryMarshal.Cast<uint, ulong>(_values))
+                    count += BitOperations.PopCount(element);
+                return count;
+            }
+        }
+
+        private bool UnsafeRead(int index)
+        {
+            var wordIndex = (_bitBase + index) >> 5;
+            return (_values[wordIndex] & (1 << (_bitBase + index))) != 0;
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
-            for (var i = 0; i < _limit - _bitBase; ++i)
+            for (var i = 0; i < Length; ++i)
                 sb.Append(this[i] ? '1' : '0');
             return sb.ToString();
         }

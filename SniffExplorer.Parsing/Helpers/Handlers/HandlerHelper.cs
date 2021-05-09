@@ -145,8 +145,7 @@ namespace SniffExplorer.Parsing.Helpers.Handlers
                     Context.RegisterResource(resource);
             }
 
-            return true;
-            // return packet.FinalizeRead();
+            return packet.FinalizeRead();
         }
     }
 }

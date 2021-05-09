@@ -8,8 +8,13 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
     [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(IContainerData))]
     public enum ContainerData
     {
-        [DescriptorValue(ValueType = typeof(uint))]                    NumSlots,
-        [DescriptorValue(ValueType = typeof(uint))]                    AlignPad,
-        [DescriptorValue(ValueType = typeof(IObjectGUID), Arity = 36)] Slots
+        [DescriptorValue(typeof(uint))]
+        NumSlots,
+        
+        [DescriptorValue(typeof(uint))]
+        AlignPad,
+        
+        [DescriptorValue(typeof(IObjectGUID),  36)]
+        Slots
     }
 }

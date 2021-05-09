@@ -8,17 +8,6 @@ using SniffExplorer.Shared.Enums;
 
 namespace SniffExplorer.Parsing.Engine
 {
-    public readonly struct ParsingOptions
-    {
-        /// <summary>
-        /// When this option is set to <see cref="bool">true</see>, descriptors (also know as update fields)
-        /// will not keep an history of their value. Only the last value seen in sniffs will be kept.
-        ///
-        /// You should use this in situations where you need to parse a sniff only for movements, or spells.
-        /// </summary>
-        public bool DiscardUpdateFields { get; init; }
-    }
-
     /// <summary>
     /// General purpose class in charge of tracking the current evaluation context of a sniff.
     /// </summary>
@@ -42,7 +31,7 @@ namespace SniffExplorer.Parsing.Engine
         
         internal ParsingContext(ClientBuild clientBuild, Type parseHelperType)
         {
-            _compositeDisposable = new CompositeDisposable();
+            _compositeDisposable = new();
 
             ClientBuild = clientBuild;
             Helper = (IParseHelper) Activator.CreateInstance(parseHelperType, this)!;

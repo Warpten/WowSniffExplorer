@@ -1,6 +1,5 @@
 ﻿using SniffExplorer.Cataclysm.UpdateFields.Types;
 using SniffExplorer.Parsing.Engine.Tracking.UpdateFields;
-using SniffExplorer.Parsing.Engine.Tracking.UpdateFields.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Shared.Attributes.Descriptors;
 using SniffExplorer.Shared.Enums;
@@ -10,96 +9,49 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
     [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(IPlayerData))]
     public enum PlayerField
     {
-        [DescriptorValue(ValueType = typeof(IObjectGUID))] DuelArbiter,
-        [DescriptorValue(ValueType = typeof(uint))] FLAGS,
-        [DescriptorValue(ValueType = typeof(uint))] GuildRank,
-        [DescriptorValue(ValueType = typeof(uint))] GuildDeleteDate,
-        [DescriptorValue(ValueType = typeof(uint))] GuildLevel,
-        [DescriptorValue(ValueType = typeof(byte[]))] Bytes0,
-        [DescriptorValue(ValueType = typeof(byte[]))] Bytes1,
-        [DescriptorValue(ValueType = typeof(byte[]))] Bytes2,
-        [DescriptorValue(ValueType = typeof(uint))] DuelTeam,
-        [DescriptorValue(ValueType = typeof(uint))] GuildTimestamp,
-        [DescriptorValue(ValueType = typeof(QuestData), Arity = 50)] QuestLog,
-        [DescriptorValue(ValueType = typeof(VisibleItem), Arity = 19)] VisibleItems,
-        [DescriptorValue(ValueType = typeof(uint))] ChosenTitle,
-        [DescriptorValue(ValueType = typeof(uint))] FakeInebriation,
-        [DescriptorValue(ValueType = typeof(uint))] FIELD_PAD_0
-    }
-
-    [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(IActivePlayerData))]
-    public enum ActivePlayerField
-    {
-        [DescriptorValue(ValueType = typeof(IObjectGUID), Arity = 23 + 16 + 28 + 7)] InventorySlots,
-        [DescriptorValue(ValueType = typeof(IObjectGUID), Arity = 12)] VendorBuyBackSlots,
-        [DescriptorValue(ValueType = typeof(IObjectGUID))] Farsight,
-        [DescriptorValue(ValueType = typeof(IBlobUpdateField), Arity = (2 + 2 + 2 + 2) * 4)] KnownTitles,
-        [DescriptorValue(ValueType = typeof(uint))] XP,
-        [DescriptorValue(ValueType = typeof(uint))] NextLevelXP,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillLineIDs,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillSteps,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillRanks,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillMaxRanks,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillModifiers,
-        [DescriptorValue(ValueType = typeof(ushort[]), Arity = 64)] SkillTalents,
-        [DescriptorValue(ValueType = typeof(uint))] CharacterPoints,
-        [DescriptorValue(ValueType = typeof(uint))] TrackCreatures,
-        [DescriptorValue(ValueType = typeof(uint))] TrackResources,
-        [DescriptorValue(ValueType = typeof(uint))] Expertise,
-        [DescriptorValue(ValueType = typeof(uint))] OffHandExpertise,
-        [DescriptorValue(ValueType = typeof(float))] BlockPercentage,
-        [DescriptorValue(ValueType = typeof(float))] DodgePercentage,
-        [DescriptorValue(ValueType = typeof(float))] ParryPercentage,
-        [DescriptorValue(ValueType = typeof(float))] CritPercentage,
-        [DescriptorValue(ValueType = typeof(float))] RangedCritPercentage,
-        [DescriptorValue(ValueType = typeof(float))] OffHandCritPercentage,
-        [DescriptorValue(ValueType = typeof(float), Arity = 7)] SpellCritPercentages,
-        [DescriptorValue(ValueType = typeof(float))] ShieldBlock,
-        [DescriptorValue(ValueType = typeof(float))] ShieldBlockCritPercentage,
-        [DescriptorValue(ValueType = typeof(float))] Mastery,
-        [DescriptorValue(ValueType = typeof(IBlobUpdateField), Arity = 156 * 4)] ExploredZones,
-        [DescriptorValue(ValueType = typeof(uint))] RestStateExperience,
-        [DescriptorValue(ValueType = typeof(ulong))] Coinage,
-        [DescriptorValue(ValueType = typeof(int), Arity = 7)] ModDamageDonePos,
-        [DescriptorValue(ValueType = typeof(int), Arity = 7)] ModDamageDoneNeg,
-        [DescriptorValue(ValueType = typeof(int), Arity = 7)] ModDamageDonePct,
-        [DescriptorValue(ValueType = typeof(int))] ModHealingDonePos,
-        [DescriptorValue(ValueType = typeof(float))] ModHealingPct,
-        [DescriptorValue(ValueType = typeof(float))] ModHealingDonePct,
-        [DescriptorValue(ValueType = typeof(float), Arity = 3)] WeaponDamageMultipliers,
-        [DescriptorValue(ValueType = typeof(float))] ModSpellPowerPCT,
-        [DescriptorValue(ValueType = typeof(float))] OverrideSpellPowerByApPct,
-        [DescriptorValue(ValueType = typeof(int))] ModTargetResistance,
-        [DescriptorValue(ValueType = typeof(int))] ModTargetPhysicalResistance,
-        [DescriptorValue(ValueType = typeof(byte[]))] FIELD_BYTES,
-        [DescriptorValue(ValueType = typeof(int))] SelfResurrectionSpell,
-        [DescriptorValue(ValueType = typeof(int))] PvPMedals,
-        [DescriptorValue(ValueType = typeof(int), Arity = 12)] BuyBackPrices,
-        [DescriptorValue(ValueType = typeof(int), Arity = 12)] BuyBackTimestamp,
-        [DescriptorValue(ValueType = typeof(ushort[]))] Kills,
-        [DescriptorValue(ValueType = typeof(int))] LifetimeHonorableKills,
-        [DescriptorValue(ValueType = typeof(byte[]))] Bytes3,
-        [DescriptorValue(ValueType = typeof(int))] WatchedFactionIndex,
-        [DescriptorValue(ValueType = typeof(int), Arity = 26)] CombatRatings,
-        [DescriptorValue(ValueType = typeof(int), Arity = 21)] ArenaTeamInfos,
-        [DescriptorValue(ValueType = typeof(int))] BattlegroundRating,
-        [DescriptorValue(ValueType = typeof(int))] MaxLevel,
-        [DescriptorValue(ValueType = typeof(int), Arity = 25)] DailyQuests,
-        [DescriptorValue(ValueType = typeof(float), Arity = 4)] RuneRegen,
-        [DescriptorValue(ValueType = typeof(int), Arity = 3)] NoReagentCost,
-        [DescriptorValue(ValueType = typeof(int), Arity = 9)] GlyphSlots,
-        [DescriptorValue(ValueType = typeof(int), Arity = 9)] Glyphs,
-        [DescriptorValue(ValueType = typeof(int))] GlyphsEnabled,
-        [DescriptorValue(ValueType = typeof(int))] PetSpellPower,
-        [DescriptorValue(ValueType = typeof(IBlobUpdateField), Arity = 8 * 4)] Researching,
-        [DescriptorValue(ValueType = typeof(IBlobUpdateField), Arity = 8 * 4)] ResearchSites,
-        [DescriptorValue(ValueType = typeof(int), Arity = 2)] ProfessionSkillLines,
-        [DescriptorValue(ValueType = typeof(float))] UiHitModifier,
-        [DescriptorValue(ValueType = typeof(float))] UiSpellHitModifier,
-        [DescriptorValue(ValueType = typeof(int))] HomeRealmTimeOffset,
-        [DescriptorValue(ValueType = typeof(float))] ModHaste,
-        [DescriptorValue(ValueType = typeof(float))] ModRangedHaste,
-        [DescriptorValue(ValueType = typeof(float))] ModPetHaste,
-        [DescriptorValue(ValueType = typeof(float))] ModHasteRegen,
+        [DescriptorValue(typeof(IObjectGUID))]
+        DuelArbiter,
+        
+        [DescriptorValue(typeof(uint))]
+        FLAGS,
+        
+        [DescriptorValue(typeof(uint))]
+        GuildRank,
+        
+        [DescriptorValue(typeof(uint))]
+        GuildDeleteDate,
+        
+        [DescriptorValue(typeof(uint))]
+        GuildLevel,
+        
+        [DescriptorValue(typeof(byte[]))]
+        Bytes0,
+        
+        [DescriptorValue(typeof(byte[]))]
+        Bytes1,
+        
+        [DescriptorValue(typeof(byte[]))]
+        Bytes2,
+        
+        [DescriptorValue(typeof(uint))]
+        DuelTeam,
+        
+        [DescriptorValue(typeof(uint))]
+        GuildTimestamp,
+        
+        [DescriptorValue(typeof(QuestData), 50)]
+        QuestLog,
+        
+        [DescriptorValue(typeof(VisibleItem), 19)]
+        VisibleItems,
+        
+        [DescriptorValue(typeof(uint))]
+        ChosenTitle,
+        
+        [DescriptorValue(typeof(uint))]
+        FakeInebriation,
+        
+        [DescriptorValue(typeof(uint))]
+        _ // Padding
     }
 }

@@ -27,7 +27,7 @@ namespace SniffExplorer.Parsing.Engine.Tracking.Entities
 
             UnitData = unitData ?? throw new InvalidOperationException();
 
-            UnitData.Bytes0.ValueChanges.Take(1).Subscribe(tuple => {
+            UnitData.Bytes0.Take(1).Subscribe(tuple => {
                 if (tuple.Value[1] != 0)
                     Class = (ClassMask)(1 << (tuple.Value[1] - 1));
 

@@ -99,10 +99,8 @@ namespace SniffExplorer.Generators.UpdateFields
                 // 1. The actual type of the updatefield.
                 // 2. The arity of the property, if it is an array of updatefields.
 
-                var updateFieldType =
-                    descriptorValueAttributeData.FindArgument(nameof(DescriptorValueAttribute.ValueType))!.Value
-                        .Value as ITypeSymbol;
-                var propertyArity = descriptorValueAttributeData.FindArgument(nameof(DescriptorValueAttribute.Arity));
+                var updateFieldType = descriptorValueAttributeData.FindArgument("valueType")!.Value.Value as ITypeSymbol;
+                var propertyArity = descriptorValueAttributeData.FindArgument("arity");
 
                 // Can this happen?
                 if (updateFieldType == null)

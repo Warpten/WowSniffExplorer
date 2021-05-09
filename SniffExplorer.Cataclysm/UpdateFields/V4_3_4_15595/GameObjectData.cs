@@ -8,13 +8,28 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
     [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(IGameObjectData))]
     public enum GameObjectData
     {
-        [DescriptorValue(ValueType = typeof(IObjectGUID))] CreatedBy,
-        [DescriptorValue(ValueType = typeof(int))]         DisplayID,
-        [DescriptorValue(ValueType = typeof(uint))]        Flags,
-        [DescriptorValue(ValueType = typeof(float), Arity = 4)] ParentRotation,
-        [DescriptorValue(ValueType = typeof(ushort[]))]    Dynamic,
-        [DescriptorValue(ValueType = typeof(int))]         Faction,
-        [DescriptorValue(ValueType = typeof(int))]         Level,
-        [DescriptorValue(ValueType = typeof(byte[]))]      Bytes
+        [DescriptorValue(typeof(IObjectGUID))]
+        CreatedBy,
+        
+        [DescriptorValue(typeof(int))]
+        DisplayID,
+        
+        [DescriptorValue(typeof(uint))]
+        Flags,
+        
+        [DescriptorValue(typeof(float), 4)]
+        ParentRotation,
+        
+        [DescriptorValue(typeof(ushort[]))]
+        Dynamic,
+        
+        [DescriptorValue(typeof(int))]
+        Faction,
+        
+        [DescriptorValue(typeof(int))]
+        Level,
+        
+        [DescriptorValue(typeof(byte[]))]
+        Bytes
     }
 }

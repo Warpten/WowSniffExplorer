@@ -16,7 +16,7 @@
         public IUpdateField[] VisibleItems { get; }
         public IUpdateField ChosenTitle { get; }
         public IUpdateField FakeInebriation { get; }
-        public IUpdateField FIELD_PAD_0 { get; }
+        public IUpdateField _ { get; }
     }
 
     public interface IActivePlayerData : IUpdateFieldStorage

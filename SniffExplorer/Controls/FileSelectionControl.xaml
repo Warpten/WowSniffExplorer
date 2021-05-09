@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SniffExplorer.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:models="clr-namespace:SniffExplorer.Controls.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              PreviewDragOver="HandleDragOver" PreviewDrop="HandleDrop">
+
+    <UserControl.DataContext>
+        <models:FileSelectionModel/>
+    </UserControl.DataContext>
+
     <Grid>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="550">
             <Grid.RowDefinitions>
@@ -41,15 +48,18 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" ToolTip="Disables historical recording of descriptor values. You generally do not want to do this.">
                         <CheckBox IsChecked="{Binding DiscardUpdateFields}">Ignore descriptors history</CheckBox>
-                        <!--<Image Source="{iconPacks:MaterialImage Kind=HelpCircleOutline}" Height="16" Width="16" Margin="5,0,0,0" />-->
+                        <Image Source="{iconPacks:MaterialImage Kind=HelpCircleOutline}" Height="16" Width="16" Margin="5,0,0,0" />
                     </StackPanel>
 
-                    <CheckBox IsChecked="{Binding IgnorePlayers}">Ignore players</CheckBox>
+                    <StackPanel Orientation="Horizontal" ToolTip="Disables state recording of units for which a create block was not received in object update.">
+                        <CheckBox IsChecked="{Binding DiscardUnknownEntities}">Discard unknown entites</CheckBox>
+                        <Image Source="{iconPacks:MaterialImage Kind=HelpCircleOutline}" Height="16" Width="16" Margin="5,0,0,0" />
+                    </StackPanel>
 
                     <Button HorizontalAlignment="Center" Padding="5,3" Margin="0,10,0,0" Click="HandleLoadButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>Load</TextBlock>
-                            <!--<Image Source="{iconPacks:MaterialImage Kind=ProgressUpload}" Height="16" Width="16" Margin="5,0,0,0" />-->
+                            <Image Source="{iconPacks:MaterialImage Kind=ProgressUpload}" Height="16" Width="16" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button>
                 </StackPanel>

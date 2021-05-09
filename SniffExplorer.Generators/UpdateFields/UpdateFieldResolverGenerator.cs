@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using SniffExplorer.Generators.Utilities;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using SniffExplorer.Shared.Attributes.Descriptors;
 using SniffExplorer.Shared.Enums;
@@ -62,8 +63,8 @@ namespace SniffExplorer.Generators.UpdateFields
 
         public override void Initialize(GeneratorInitializationContext context)
         {
-            // if (!Debugger.IsAttached)
-            //     Debugger.Launch();
+            //if (!Debugger.IsAttached)
+                //Debugger.Launch();
 
             // Register a syntax receiver that will be created for each generation pass
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());

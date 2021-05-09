@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using SniffExplorer.Parsing.Engine;
-using SniffExplorer.Parsing.Engine.Tracking.Entities;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Types.ObjectGUIDs;
 using SniffExplorer.Parsing.Versions;
@@ -78,7 +70,7 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
 
                 public Location(Packet packet)
                 {
-                    Transport = packet.ReadGUID();
+                    Transport = packet.ReadPackedGUID();
                     Position = packet.ReadVector3();
                 }
             }
@@ -143,23 +135,23 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                         var missType = packet.ReadUInt8();
 
                         if (missType == 11) // Reflect
-                            MissedTargets[i] = new MissInfo(missTarget, missType, packet.ReadUInt8());
+                            MissedTargets[i] = new(missTarget, missType, packet.ReadUInt8());
                         else
-                            MissedTargets[i] = new MissInfo(missTarget, missType);
+                            MissedTargets[i] = new(missTarget, missType);
                     }
                 }
 
                 TargetFlags = (TargetFlags) packet.ReadUInt32();
                 if (TargetFlags.HasFlag(TargetFlags.Unit | TargetFlags.CorpseAlly | TargetFlags.CorpseEnemy | TargetFlags.GameObject | TargetFlags.Minipet))
-                    ExplicitTarget = packet.ReadGUID();
+                    ExplicitTarget = packet.ReadPackedGUID();
                 else if (TargetFlags.HasFlag(TargetFlags.Item | TargetFlags.TradeItem))
-                    ExplicitTarget = packet.ReadGUID();
+                    ExplicitTarget = packet.ReadPackedGUID();
                 
                 if (TargetFlags.HasFlag(TargetFlags.SourceLocation))
-                    Source = new Location(packet);
+                    Source = new(packet);
                 
                 if (TargetFlags.HasFlag(TargetFlags.DestinationLocation))
-                    Destination = new Location(packet);
+                    Destination = new(packet);
                 
                 if (TargetFlags.HasFlag(TargetFlags.String))
                 {
@@ -182,10 +174,10 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                     Power = packet.ReadUInt32();
 
                 if (CastFlags.HasFlag(CastFlags.Runes))
-                    Runes = new RuneState(packet);
+                    Runes = new(packet);
 
                 if (CastFlags.HasFlag(CastFlags.Missile))
-                    MissileInfo = new MissileState(packet);
+                    MissileInfo = new(packet);
 
                 if (CastFlags.HasFlag(CastFlags.Ammo))
                 {
@@ -199,10 +191,18 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                     var i1 = packet.ReadUInt32();
                 }
 
-                if (CastFlags.HasFlag(CastFlags.DestLocation))
+                if (TargetFlags.HasFlag(TargetFlags.DestinationLocation)) // Wrong mask, cba fixing rn
                 {
                     var destLocationCastIndex = packet.ReadUInt8();
                 }
+
+                if (CastFlags.HasFlag(CastFlags.Immunities))
+                {
+                    var mechanicImmunity = packet.ReadUInt32();
+                    var immunity = packet.ReadUInt32();
+                }
+
+                // More data (prediction)
             }
         }
 
@@ -211,7 +211,6 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
         {
             var castData = new SpellCastData(packet);
             
-            // TODO: There's a lot more to read here, but this is early prototyping.
             var subscription = context.SpellHistory.Register(castData.CastGUID, castData.Caster, castData.UnitCaster, castData.SpellID).Subscribe(historyEntry =>
             {
                 historyEntry.SpellStart = packet.Moment;
@@ -228,9 +227,9 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
             // Delayed subscription because we need to wait for SMSG_SPELL_START to be processed.
             var subscription = context.SpellHistory[spellCastData.CastGUID].Subscribe(historyEntry =>
             {
-                Debug.Assert(historyEntry.SpellID == spellCastData.SpellID, "Spell ID mismatch!");
-                Debug.Assert(historyEntry.Caster == spellCastData.Caster, "Caster GUID mismatch");
-                Debug.Assert(historyEntry.UnitCaster == spellCastData.UnitCaster, "Unit caster GUID mismatch!");
+                // Debug.Assert(historyEntry.SpellID == spellCastData.SpellID, "Spell ID mismatch!");
+                // Debug.Assert(historyEntry.Caster == spellCastData.Caster, "Caster GUID mismatch");
+                // Debug.Assert(historyEntry.UnitCaster == spellCastData.UnitCaster, "Unit caster GUID mismatch!");
 
                 historyEntry.HitTargets = spellCastData.HitTargets;
                 historyEntry.MissedTargets = spellCastData.MissedTargets;

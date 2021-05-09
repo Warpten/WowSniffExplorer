@@ -8,13 +8,28 @@ namespace SniffExplorer.Cataclysm.UpdateFields.V4_3_4_15595
     [Descriptor(ClientBuild = 15595, RealmType = RealmExpansionType.Retail, InterfaceType = typeof(ICorpseData))]
     public enum CorpseField
     {
-        [DescriptorValue(ValueType = typeof(IObjectGUID))]      Owner,
-        [DescriptorValue(ValueType = typeof(IObjectGUID))]      Party,
-        [DescriptorValue(ValueType = typeof(uint))]             DisplayId,
-        [DescriptorValue(ValueType = typeof(uint), Arity = 19)] Items,
-        [DescriptorValue(ValueType = typeof(uint))]             Bytes1,
-        [DescriptorValue(ValueType = typeof(uint))]             Bytes2,
-        [DescriptorValue(ValueType = typeof(uint))]             Flags,
-        [DescriptorValue(ValueType = typeof(uint))]             DynamicFlags
+        [DescriptorValue(typeof(IObjectGUID))]
+        Owner,
+        
+        [DescriptorValue(typeof(IObjectGUID))]
+        Party,
+        
+        [DescriptorValue(typeof(uint))]
+        DisplayId,
+        
+        [DescriptorValue(typeof(uint), 19)]
+        Items,
+        
+        [DescriptorValue(typeof(uint))]
+        Bytes1,
+        
+        [DescriptorValue(typeof(uint))]
+        Bytes2,
+        
+        [DescriptorValue(typeof(uint))]
+        Flags,
+        
+        [DescriptorValue(typeof(uint))]
+        DynamicFlags
     }
 }

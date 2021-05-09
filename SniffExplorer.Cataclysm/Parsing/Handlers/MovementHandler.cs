@@ -100,7 +100,8 @@ namespace SniffExplorer.Cataclysm.Parsing.Handlers
                     break;
                 case 1:
                     splineInfo.Mode = SplineMode.Stop;
-                    break;
+                    // TODO: Log?
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(splineMode));
             }

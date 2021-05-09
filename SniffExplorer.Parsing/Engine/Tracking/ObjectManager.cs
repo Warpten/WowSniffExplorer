@@ -17,20 +17,12 @@ namespace SniffExplorer.Parsing.Engine.Tracking
         
         internal ObjectManager(IParseHelper parseHelper) => _parseHelper = parseHelper;
 
+        // TODO: Again, bad situation to be in: we don't know who the local player is (we **could** guess it from any CMSG opcode...)
         public IEntity this[IObjectGUID guid]
-        {
-            // TODO: Again, bad situation to be in: we don't know who the local player is (we **could** guess it from any CMSG opcode...)
-            get => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, EntityTypeID.Unknown, true));
-            set => _entityStore.AddOrUpdate(guid, _ => value, (_, oldValue) => oldValue);
-        }
+             => _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, EntityTypeID.Unknown, true));
 
         public IEntity this[IObjectGUID guid, EntityTypeID entityTypeID, bool isSelf]
-        {
-            get
-            {
-                return _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, entityTypeID, isSelf));
-            }
-        }
+            =>  _entityStore.GetOrAdd(guid, key => _parseHelper.CreateEntity(key, entityTypeID, isSelf));
 
         /// <summary>
         /// 

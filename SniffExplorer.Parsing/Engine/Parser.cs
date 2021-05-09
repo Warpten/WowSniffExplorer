@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SniffExplorer.Parsing.Attributes;
 using SniffExplorer.Parsing.Helpers;
+using SniffExplorer.Parsing.Helpers.Handlers;
 using SniffExplorer.Parsing.Loading;
 using SniffExplorer.Parsing.Types;
 using SniffExplorer.Parsing.Versions;
@@ -84,7 +85,7 @@ namespace SniffExplorer.Parsing.Engine
                     if (!typeof(IParseHelper).IsAssignableFrom(type))
                         continue;
 
-                    _parsingContext = new ParsingContext(file.ClientBuild, type);
+                    _parsingContext = new(file.ClientBuild, type);
                     return;
                 }
             }
@@ -109,11 +110,46 @@ namespace SniffExplorer.Parsing.Engine
 
             // Collect all the packets into an observable.
 
+            #if true
+            var action = Observable.Start(() =>
+            {
+                var count = 0;
+
+                foreach (var (packet, index) in _file.Enumerate(_parsingContext).Indexed())
+                {
+                    _parsingContext.Helper.Handlers.Process(packet);
+                    _packetParsed.OnNext((packet.Opcode, index));
+
+                    ++count;
+                }
+
+                return count;
+            }, TaskPoolScheduler.Default);
+
+            action.TimeInterval().Subscribe(t =>
+            {
+                var statistics = new ParsingStatistics
+                {
+                    ExecutionTime = t.Interval,
+                    ParsedPacketCount = (uint) t.Value,
+                    PacketCount = (uint) _file.Count
+                };
+
+                contextSubject.OnNext((_parsingContext, statistics));
+                contextSubject.OnCompleted();
+            }, err =>
+            {
+                contextSubject.OnError(err);
+            });
+            
+            #else
             Observable.Start(() =>
             {
                 var executionSequence = new ExecutionSequence();
                 // Step 1. Process SMSG_UPDATE_OBJECT sequentially.
-                executionSequence.AddStep(p => p.Opcode == Opcode.SMSG_UPDATE_OBJECT, false);
+                executionSequence.AddStep(p => p.Opcode == Opcode.SMSG_UPDATE_OBJECT, false)
+                    .AddStep(p => p.Opcode == Opcode.SMSG_SPELL_START || p.Opcode == Opcode.SMSG_SPELL_GO, false)
+                    .AddStep(p => p.Opcode == Opcode.SMSG_AURA_UPDATE, false);
 
                 executionSequence.PacketParsed.Subscribe(info => {
                     _packetParsed.OnNext(info);
@@ -140,9 +176,9 @@ namespace SniffExplorer.Parsing.Engine
                     _packetParsed.OnCompleted();
 
                     contextSubject.OnError(error);
-                    contextSubject.OnCompleted();
                 });
             });
+            #endif
 
             return contextSubject.AsObservable();
         }
@@ -172,12 +208,23 @@ namespace SniffExplorer.Parsing.Engine
             private readonly bool _parallel;
             private readonly ExecutionSequence _sequence;
 
+            private readonly List<Packet> _queuedPackets = new();
+
             public Element(Func<Packet, bool> filter, bool parallel, ExecutionSequence sequence)
             {
                 _filter = filter;
                 _parallel = parallel;
 
                 _sequence = sequence;
+            }
+
+            public bool TryEnqueue(Packet packet)
+            {
+                if (!_filter(packet))
+                    return false;
+
+                _queuedPackets.Add(packet);
+                return true;
             }
 
             public ILookup<bool, Packet> Filter(IEnumerable<Packet> grouping)
@@ -222,11 +269,11 @@ namespace SniffExplorer.Parsing.Engine
             }
         }
 
-        public IObservable<long> Execute(IEnumerable<Packet> sequence, ParsingContext context)
+        public IObservable<long> Execute(IEnumerable<Packet> packets, ParsingContext context)
         {
             // Add a last step that processes everything in parallel
             AddStep(_ => true, true);
-
+            
             static void executeNode(LinkedListNode<Element> node, IEnumerable<Packet> remainder, ParsingContext ctx, long previousCount, Subject<long> accumulator)
             {
                 var partition = node.Value.Filter(remainder);
@@ -244,7 +291,7 @@ namespace SniffExplorer.Parsing.Engine
             }
 
             var executionSubject = new Subject<long>();
-            executeNode(_elements.First!, sequence, context, 0, executionSubject);
+            executeNode(_elements.First!, packets, context, 0, executionSubject);
             return executionSubject;
         }
     }

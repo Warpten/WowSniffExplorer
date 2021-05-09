@@ -19,9 +19,6 @@ namespace SniffExplorer.Controls
         public FileSelectionControl()
         {
             InitializeComponent();
-
-            var model = new FileSelectionModel();
-            DataContext = model;
         }
 
         private void HandleBrowserButton(object sender, RoutedEventArgs e)
@@ -42,7 +39,8 @@ namespace SniffExplorer.Controls
                 return;
 
             var options = new ParsingOptions {
-                DiscardUpdateFields = Model.DiscardUpdateFields
+                DiscardUpdateFields = Model.DiscardUpdateFields,
+                DiscardUnknownEntities = Model.DiscardUnknownEntities
             };
 
             FileSelected?.Invoke(Model.FilePath, options);

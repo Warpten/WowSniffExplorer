@@ -69,6 +69,6 @@ namespace SniffExplorer.Parsing.Engine.Tracking.UpdateFields
         public IUpdateField<float> MaxHealthModifier { get; }
         public IUpdateField<float> HoverHeight { get; }
         public IUpdateField<uint> MaxItemLevel { get; }
-        public IUpdateField<uint> Padding { get; }
+        public IUpdateField<uint> _ { get; }
     }
 }
